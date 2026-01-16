@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"password123\"\n}",
+							"raw": "{\n    \"email\": \"superadmin@example.com\",\n    \"password\": \"admin123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -215,7 +215,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Acme Corporation\",\n    \"logoUrl\": \"https://example.com/logo.png\",\n    \"contactEmail\": \"contact@acme.com\",\n    \"website\": \"https://acme.com\",\n    \"address\": \"123 Business Street, City\",\n    \"theme\": {\n        \"primaryColor\": \"#3B82F6\",\n        \"secondaryColor\": \"#10B981\",\n        \"fontFamily\": \"Inter, sans-serif\"\n    },\n    \"learningPolicies\": {\n        \"allowSelfEnrollment\": true,\n        \"certificateAutoGeneration\": true,\n        \"passingScorePercentage\": 70,\n        \"maxQuizAttempts\": 3\n    }\n}",
+							"raw": "{\n    \"name\": \"Acme Corporation\",\n    \"logoUrl\": \"\",\n    \"contactEmail\": \"contact@acme.com\",\n    \"website\": \"https://acme.com\",\n    \"address\": \"123 Business Street, City\",\n    \"theme\": {\n        \"primaryColor\": \"#3B82F6\",\n        \"secondaryColor\": \"#10B981\",\n        \"fontFamily\": \"Inter, sans-serif\"\n    },\n    \"learningPolicies\": {\n        \"allowSelfEnrollment\": true,\n        \"certificateAutoGeneration\": true,\n        \"passingScorePercentage\": 70,\n        \"maxQuizAttempts\": 3\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -444,7 +444,7 @@
 					"response": []
 				},
 				{
-					"name": "Upload Logo (Admin)",
+					"name": "Update Logo URL (Admin)",
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -478,6 +478,113 @@
 								{
 									"key": "id",
 									"value": "org_id_here"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Upload",
+			"item": [
+				{
+					"name": "Upload Logo (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "logo",
+									"type": "file",
+									"src": ""
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/upload/logo",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"upload",
+								"logo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Image (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": ""
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/upload/image",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"upload",
+								"image"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Image (Admin)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/upload/image/:publicId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"upload",
+								"image",
+								":publicId"
+							],
+							"variable": [
+								{
+									"key": "publicId",
+									"value": "lms/logos/your_image_id"
 								}
 							]
 						}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button, Input, Card } from '../../components/common';
 import api from '../../api/axios';
 import toast from 'react-hot-toast';
@@ -6,8 +6,10 @@ import toast from 'react-hot-toast';
 const OrganizationSettingsPage = () => {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [uploading, setUploading] = useState(false);
     const [organization, setOrganization] = useState(null);
     const [activeTab, setActiveTab] = useState('profile');
+    const fileInputRef = useRef(null);
 
     const [formData, setFormData] = useState({
         name: '',
@@ -52,6 +54,55 @@ const OrganizationSettingsPage = () => {
             console.log('Organization not found');
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleLogoUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        // Validate file type
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+        if (!allowedTypes.includes(file.type)) {
+            toast.error('Please upload an image file (jpeg, png, gif, webp)');
+            return;
+        }
+
+        // Validate file size (5MB max)
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error('Image size must be less than 5MB');
+            return;
+        }
+
+        setUploading(true);
+        const uploadData = new FormData();
+        uploadData.append('logo', file);
+
+        try {
+            const response = await api.post('/upload/logo', uploadData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            const logoUrl = response.data.data.url;
+            setFormData({ ...formData, logoUrl });
+
+            // If organization exists, update logo immediately
+            if (organization) {
+                await api.put(`/organizations/${organization._id}/logo`, { logoUrl });
+                toast.success('Logo uploaded successfully');
+            } else {
+                toast.success('Logo uploaded! Save profile to apply.');
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.error || 'Logo upload failed');
+        } finally {
+            setUploading(false);
+            // Reset file input
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
         }
     };
 
@@ -135,8 +186,8 @@ const OrganizationSettingsPage = () => {
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
                             className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === tab.id
-                                    ? 'border-indigo-600 text-indigo-600'
-                                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                ? 'border-indigo-600 text-indigo-600'
+                                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                                 }`}
                         >
                             {tab.label}
@@ -190,8 +241,10 @@ const OrganizationSettingsPage = () => {
                 <div className="space-y-6">
                     <Card title="Logo" subtitle="Your organization's logo">
                         <div className="flex items-start space-x-6">
-                            <div className="w-24 h-24 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
-                                {formData.logoUrl ? (
+                            <div className="w-24 h-24 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden border-2 border-dashed border-gray-300">
+                                {uploading ? (
+                                    <div className="animate-spin rounded-full h-8 w-8 border-4 border-indigo-600 border-t-transparent"></div>
+                                ) : formData.logoUrl ? (
                                     <img src={formData.logoUrl} alt="Logo" className="w-full h-full object-cover" />
                                 ) : (
                                     <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -199,13 +252,41 @@ const OrganizationSettingsPage = () => {
                                     </svg>
                                 )}
                             </div>
-                            <div className="flex-1">
-                                <Input
-                                    label="Logo URL"
-                                    placeholder="https://example.com/logo.png"
-                                    value={formData.logoUrl}
-                                    onChange={(e) => setFormData({ ...formData, logoUrl: e.target.value })}
-                                />
+                            <div className="flex-1 space-y-3">
+                                <div>
+                                    <input
+                                        ref={fileInputRef}
+                                        type="file"
+                                        accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                                        onChange={handleLogoUpload}
+                                        className="hidden"
+                                        id="logo-upload"
+                                    />
+                                    <Button
+                                        onClick={() => fileInputRef.current?.click()}
+                                        variant="outline"
+                                        loading={uploading}
+                                        disabled={uploading}
+                                    >
+                                        {uploading ? 'Uploading...' : 'Upload Logo'}
+                                    </Button>
+                                    <p className="text-xs text-gray-500 mt-2">
+                                        JPG, PNG, GIF or WebP. Max 5MB.
+                                    </p>
+                                </div>
+                                {formData.logoUrl && (
+                                    <div className="flex items-center space-x-2">
+                                        <span className="text-xs text-gray-500 truncate max-w-xs">
+                                            {formData.logoUrl}
+                                        </span>
+                                        <button
+                                            onClick={() => setFormData({ ...formData, logoUrl: '' })}
+                                            className="text-red-500 hover:text-red-700 text-xs"
+                                        >
+                                            Remove
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </Card>
