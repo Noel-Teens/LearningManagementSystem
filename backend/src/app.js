@@ -16,6 +16,17 @@ app.use(cors());
 app.use('/api/auth', authRoutes);
 app.use('/api/organizations', organizationRoutes);
 
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+    res.status(200).json({
+        success: true,
+        status: 'ok',
+        message: 'Server is running',
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+    });
+});
+
 // Error handler middleware
 app.use(errorHandler);
 
