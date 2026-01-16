@@ -7,4 +7,8 @@ module.exports = {
   JWT_SECRET: process.env.JWT_SECRET || 'your_jwt_secret_key',
   JWT_EXPIRE: process.env.JWT_EXPIRE || '1d',
   NODE_ENV: process.env.NODE_ENV || 'development',
+  CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
+  CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
+  CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
 };
+
