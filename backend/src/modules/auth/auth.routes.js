@@ -4,8 +4,10 @@ const {
   login,
   logout,
   getMe,
+  getUsers,
   updatePassword,
   updateUserStatus,
+  deleteUser,
   forgotPassword,
   resetPassword,
 } = require('./auth.controller');
@@ -22,6 +24,8 @@ router.get('/me', protect, getMe);
 router.post('/forgotpassword', forgotPassword);
 router.put('/resetpassword/:resettoken', resetPassword);
 router.put('/updatepassword', protect, updatePassword);
+router.get('/users', protect, authorize('SuperAdmin', 'Admin'), getUsers);
 router.put('/users/:id/status', protect, authorize('SuperAdmin', 'Admin'), updateUserStatus);
+router.delete('/users/:id', protect, authorize('SuperAdmin'), deleteUser);
 
 module.exports = router;

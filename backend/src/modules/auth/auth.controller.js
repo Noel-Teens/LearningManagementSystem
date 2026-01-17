@@ -142,6 +142,62 @@ exports.updateUserStatus = async (req, res, next) => {
 };
 
 /**
+ * @desc    Get all users (Role based access)
+ * @route   GET /api/auth/users
+ * @access  Private/Admin
+ */
+exports.getUsers = async (req, res, next) => {
+  try {
+    let query = {};
+
+    // If user is Admin, they cannot see SuperAdmin or other Admins
+    if (req.user.role === 'Admin') {
+      query = { role: { $in: ['Trainer', 'Learner'] } };
+    }
+    // SuperAdmin sees everyone (default query is empty)
+
+    const users = await User.find(query).sort('-createdAt');
+
+    res.status(200).json({
+      success: true,
+      count: users.length,
+      data: users,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * @desc    Delete user
+ * @route   DELETE /api/auth/users/:id
+ * @access  Private/SuperAdmin
+ */
+exports.deleteUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return next(new ErrorResponse('User not found', 404));
+    }
+
+    // Prevent deleting self
+    if (user._id.toString() === req.user.id) {
+      return next(new ErrorResponse('You cannot delete yourself', 400));
+    }
+
+    await user.deleteOne();
+
+    res.status(200).json({
+      success: true,
+      data: {},
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
  * @desc    Forgot password
  * @route   POST /api/auth/forgotpassword
  * @access  Public
@@ -170,10 +226,10 @@ const sendTokenResponse = (user, statusCode, res) => {
     success: true,
     token,
     user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role
     }
   });
 };

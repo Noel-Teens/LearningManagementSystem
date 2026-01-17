@@ -18,7 +18,7 @@ const OrganizationSettingsPage = () => {
         address: '',
         logoUrl: '',
         theme: {
-            primaryColor: '#3B82F6',
+            primaryColor: '#2563EB',
             secondaryColor: '#10B981',
             fontFamily: 'Inter, sans-serif',
         },
@@ -46,7 +46,11 @@ const OrganizationSettingsPage = () => {
                     website: org.website || '',
                     address: org.address || '',
                     logoUrl: org.logoUrl || '',
-                    theme: org.theme || formData.theme,
+                    theme: org.theme || {
+                        primaryColor: '#2563EB',
+                        secondaryColor: '#10B981',
+                        fontFamily: 'Inter, sans-serif',
+                    },
                     learningPolicies: org.learningPolicies || formData.learningPolicies,
                 });
             }
@@ -165,7 +169,7 @@ const OrganizationSettingsPage = () => {
     if (loading) {
         return (
             <div className="flex items-center justify-center h-64">
-                <div className="animate-spin rounded-full h-12 w-12 border-4 border-indigo-600 border-t-transparent"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent"></div>
             </div>
         );
     }
@@ -186,7 +190,7 @@ const OrganizationSettingsPage = () => {
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
                             className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === tab.id
-                                ? 'border-indigo-600 text-indigo-600'
+                                ? 'border-blue-600 text-blue-700'
                                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                                 }`}
                         >
@@ -243,7 +247,7 @@ const OrganizationSettingsPage = () => {
                         <div className="flex items-start space-x-6">
                             <div className="w-24 h-24 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden border-2 border-dashed border-gray-300">
                                 {uploading ? (
-                                    <div className="animate-spin rounded-full h-8 w-8 border-4 border-indigo-600 border-t-transparent"></div>
+                                    <div className="animate-spin rounded-full h-8 w-8 border-4 border-blue-600 border-t-transparent"></div>
                                 ) : formData.logoUrl ? (
                                     <img src={formData.logoUrl} alt="Logo" className="w-full h-full object-cover" />
                                 ) : (
@@ -346,7 +350,7 @@ const OrganizationSettingsPage = () => {
                                     ...formData,
                                     theme: { ...formData.theme, fontFamily: e.target.value }
                                 })}
-                                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             >
                                 <option value="Inter, sans-serif">Inter</option>
                                 <option value="Roboto, sans-serif">Roboto</option>
@@ -382,7 +386,7 @@ const OrganizationSettingsPage = () => {
                                     })}
                                     className="sr-only peer"
                                 />
-                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                             </label>
                         </div>
 
@@ -401,7 +405,7 @@ const OrganizationSettingsPage = () => {
                                     })}
                                     className="sr-only peer"
                                 />
-                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                             </label>
                         </div>
 
@@ -437,7 +441,7 @@ const OrganizationSettingsPage = () => {
                                         ...formData,
                                         learningPolicies: { ...formData.learningPolicies, maxQuizAttempts: parseInt(e.target.value) }
                                     })}
-                                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 >
                                     <option value={1}>1 attempt</option>
                                     <option value={2}>2 attempts</option>

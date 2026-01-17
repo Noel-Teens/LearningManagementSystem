@@ -37,14 +37,14 @@ const ForgotPasswordPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center p-4">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
             <div className="w-full max-w-md">
                 <div className="text-center mb-8">
-                    <h1 className="text-4xl font-bold text-white">LMS Platform</h1>
-                    <p className="text-white/80 mt-2">Learning Management System</p>
+                    <h1 className="text-4xl font-bold text-gray-800">LMS Platform</h1>
+                    <p className="text-gray-600 mt-2">Learning Management System</p>
                 </div>
 
-                <Card className="backdrop-blur-sm bg-white/95">
+                <Card className="bg-white shadow-lg">
                     {submitted ? (
                         <div className="text-center py-4">
                             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
