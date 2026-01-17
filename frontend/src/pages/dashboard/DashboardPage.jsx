@@ -23,7 +23,7 @@ const DashboardPage = () => {
     return (
         <div className="space-y-6">
             {/* Welcome Header */}
-            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl p-6 text-white">
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-xl p-6 text-white">
                 <h1 className="text-2xl font-bold">Welcome back, {user?.name}!</h1>
                 <p className="mt-1 text-white/80">
                     {isAdmin()

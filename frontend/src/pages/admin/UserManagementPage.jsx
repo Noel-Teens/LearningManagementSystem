@@ -17,7 +17,7 @@ const UserManagementPage = () => {
     const [formLoading, setFormLoading] = useState(false);
     const [errors, setErrors] = useState({});
 
-    const { register, updateUserStatus } = useAuth();
+    const { register, updateUserStatus, user: currentUser } = useAuth();
 
     useEffect(() => {
         fetchUsers();
@@ -67,6 +67,18 @@ const UserManagementPage = () => {
             setUsers(users.map(u =>
                 u._id === userId ? { ...u, isActive: !currentStatus } : u
             ));
+        }
+    };
+
+    const handleDeleteUser = async (userId) => {
+        if (!window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) return;
+
+        try {
+            await api.delete(`/auth/users/${userId}`);
+            setUsers(users.filter(u => u._id !== userId));
+            toast.success('User deleted successfully');
+        } catch (error) {
+            toast.error(error.response?.data?.error || 'Failed to delete user');
         }
     };
 
@@ -120,7 +132,7 @@ const UserManagementPage = () => {
                             {loading ? (
                                 <tr>
                                     <td colSpan={5} className="px-6 py-12 text-center">
-                                        <div className="animate-spin rounded-full h-8 w-8 border-4 border-indigo-600 border-t-transparent mx-auto"></div>
+                                        <div className="animate-spin rounded-full h-8 w-8 border-4 border-blue-600 border-t-transparent mx-auto"></div>
                                     </td>
                                 </tr>
                             ) : users.length === 0 ? (
@@ -160,6 +172,17 @@ const UserManagementPage = () => {
                                             >
                                                 {user.isActive ? 'Deactivate' : 'Activate'}
                                             </Button>
+
+                                            {currentUser?.role === 'SuperAdmin' && (
+                                                <Button
+                                                    variant="danger"
+                                                    size="sm"
+                                                    className="ml-2"
+                                                    onClick={() => handleDeleteUser(user._id)}
+                                                >
+                                                    Delete
+                                                </Button>
+                                            )}
                                         </td>
                                     </tr>
                                 ))
@@ -204,7 +227,7 @@ const UserManagementPage = () => {
                         <select
                             value={formData.role}
                             onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         >
                             <option value="Learner">Learner</option>
                             <option value="Trainer">Trainer</option>

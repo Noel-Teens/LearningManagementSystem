@@ -37,7 +37,7 @@ const AppShell = ({ children }) => {
             >
                 {/* Logo */}
                 <div className="h-16 flex items-center px-6 border-b border-gray-200">
-                    <span className="text-xl font-bold text-indigo-600">LMS</span>
+                    <span className="text-xl font-bold text-blue-700">LMS</span>
                     <span className="text-xl font-light text-gray-600 ml-1">Platform</span>
                 </div>
 
@@ -48,7 +48,7 @@ const AppShell = ({ children }) => {
                             key={item.name}
                             to={item.href}
                             className={`flex items-center px-4 py-2.5 rounded-lg transition-colors ${isActive(item.href)
-                                ? 'bg-indigo-50 text-indigo-600'
+                                ? 'bg-blue-50 text-blue-700'
                                 : 'text-gray-600 hover:bg-gray-100'
                                 }`}
                         >
