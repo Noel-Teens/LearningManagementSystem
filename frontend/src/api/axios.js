@@ -9,7 +9,6 @@ const api = axios.create({
     },
 });
 
-// Request interceptor to attach token
 api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
@@ -23,14 +22,19 @@ api.interceptors.request.use(
     }
 );
 
-// Response interceptor for error handling
 api.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response?.status === 401) {
             localStorage.removeItem('token');
             localStorage.removeItem('user');
-            window.location.href = '/login';
+
+            const isLoginPage = window.location.pathname === '/login';
+            const isLoginRequest = error.config?.url?.includes('/auth/login');
+
+            if (!isLoginPage && !isLoginRequest) {
+                window.location.href = '/login';
+            }
         }
         return Promise.reject(error);
     }

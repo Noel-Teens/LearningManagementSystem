@@ -22,7 +22,6 @@ export const AuthProvider = ({ children }) => {
 
         if (token && storedUser) {
             setUser(JSON.parse(storedUser));
-            // Verify token is still valid
             getMe();
         } else {
             setLoading(false);
@@ -55,8 +54,7 @@ export const AuthProvider = ({ children }) => {
             toast.success(`Welcome back, ${userData.name}!`);
             return { success: true };
         } catch (error) {
-            const message = error.response?.data?.error || 'Login failed';
-            toast.error(message);
+            const message = error.response?.data?.error || 'Invalid email or password';
             return { success: false, error: message };
         }
     };
