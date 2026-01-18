@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../../modules/auth/context/AuthContext';
 
 const AppShell = ({ children }) => {
     const [sidebarOpen, setSidebarOpen] = useState(true);

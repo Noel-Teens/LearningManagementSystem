@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Button, Input, Card, Modal } from '../../components/common';
-import { useAuth } from '../../context/AuthContext';
-import api from '../../api/axios';
+import { Button, Input, Card, Modal } from '../../../shared/components/common';
+import { useAuth } from '../../auth/context/AuthContext';
+import api from '../../../shared/api/axios';
 import toast from 'react-hot-toast';
 
 const UserManagementPage = () => {
