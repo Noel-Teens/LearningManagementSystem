@@ -9,6 +9,7 @@ import ProtectedRoute from './components/layout/ProtectedRoute';
 // Auth pages
 import LoginPage from './pages/auth/LoginPage';
 import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
+import ResetPasswordPage from './pages/auth/ResetPasswordPage';
 
 // Dashboard
 import DashboardPage from './pages/dashboard/DashboardPage';
@@ -48,6 +49,7 @@ function App() {
           {/* Public routes */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
 
           {/* Protected routes */}
           <Route path="/dashboard" element={
