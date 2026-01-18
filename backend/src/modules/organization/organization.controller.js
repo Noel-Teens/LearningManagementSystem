@@ -39,28 +39,6 @@ exports.getOrganizations = async (req, res, next) => {
 };
 
 /**
- * @desc    Get single organization
- * @route   GET /api/organizations/:id
- * @access  Private
- */
-exports.getOrganization = async (req, res, next) => {
-    try {
-        const organization = await Organization.findById(req.params.id);
-
-        if (!organization) {
-            return next(new ErrorResponse('Organization not found', 404));
-        }
-
-        res.status(200).json({
-            success: true,
-            data: organization,
-        });
-    } catch (error) {
-        next(error);
-    }
-};
-
-/**
  * @desc    Update organization
  * @route   PUT /api/organizations/:id
  * @access  Private/SuperAdmin/Admin
@@ -89,29 +67,7 @@ exports.updateOrganization = async (req, res, next) => {
     }
 };
 
-/**
- * @desc    Delete organization
- * @route   DELETE /api/organizations/:id
- * @access  Private/SuperAdmin
- */
-exports.deleteOrganization = async (req, res, next) => {
-    try {
-        const organization = await Organization.findById(req.params.id);
 
-        if (!organization) {
-            return next(new ErrorResponse('Organization not found', 404));
-        }
-
-        await organization.deleteOne();
-
-        res.status(200).json({
-            success: true,
-            data: {},
-        });
-    } catch (error) {
-        next(error);
-    }
-};
 
 /**
  * @desc    Update organization theme
