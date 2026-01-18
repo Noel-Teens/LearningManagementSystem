@@ -2,9 +2,7 @@ const express = require('express');
 const {
     createOrganization,
     getOrganizations,
-    getOrganization,
     updateOrganization,
-    deleteOrganization,
     updateTheme,
     updateLearningPolicies,
     uploadLogo,
@@ -23,9 +21,7 @@ router
 
 router
     .route('/:id')
-    .get(protect, getOrganization)
-    .put(protect, authorize('SuperAdmin', 'Admin'), updateOrganization)
-    .delete(protect, authorize('SuperAdmin'), deleteOrganization);
+    .put(protect, authorize('SuperAdmin', 'Admin'), updateOrganization);
 
 // Specialized routes
 router.put('/:id/theme', protect, authorize('SuperAdmin', 'Admin'), updateTheme);

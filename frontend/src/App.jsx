@@ -1,21 +1,22 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider } from './modules/auth/context/AuthContext';
 
 // Layout components
-import AppShell from './components/layout/AppShell';
-import ProtectedRoute from './components/layout/ProtectedRoute';
+import AppShell from './shared/components/layout/AppShell';
+import ProtectedRoute from './shared/components/layout/ProtectedRoute';
 
 // Auth pages
-import LoginPage from './pages/auth/LoginPage';
-import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
+import LoginPage from './modules/auth/pages/LoginPage';
+import ForgotPasswordPage from './modules/auth/pages/ForgotPasswordPage';
+import ResetPasswordPage from './modules/auth/pages/ResetPasswordPage';
 
 // Dashboard
-import DashboardPage from './pages/dashboard/DashboardPage';
+import DashboardPage from './modules/dashboard/pages/DashboardPage';
 
 // Admin pages
-import UserManagementPage from './pages/admin/UserManagementPage';
-import OrganizationSettingsPage from './pages/admin/OrganizationSettingsPage';
+import UserManagementPage from './modules/admin/pages/UserManagementPage';
+import OrganizationSettingsPage from './modules/admin/pages/OrganizationSettingsPage';
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
           {/* Public routes */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
 
           {/* Protected routes */}
           <Route path="/dashboard" element={
