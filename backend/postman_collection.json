@@ -260,37 +260,6 @@
 					"response": []
 				},
 				{
-					"name": "Get Single Organization",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/organizations/:id",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"organizations",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "org_id_here"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Update Organization (Admin)",
 					"request": {
 						"method": "PUT",
@@ -310,37 +279,6 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{base_url}}/api/organizations/:id",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"organizations",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "org_id_here"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete Organization (SuperAdmin)",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
-							}
-						],
 						"url": {
 							"raw": "{{base_url}}/api/organizations/:id",
 							"host": [
