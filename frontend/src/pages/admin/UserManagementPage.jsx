@@ -28,7 +28,7 @@ const UserManagementPage = () => {
             const response = await api.get('/auth/users');
             const filteredUsers = (response.data.data || []).filter(u => u.role !== 'SuperAdmin');
             setUsers(filteredUsers);
-            console.log(filteredUsers);
+            
         } catch (error) {
             setUsers([]);
         } finally {
