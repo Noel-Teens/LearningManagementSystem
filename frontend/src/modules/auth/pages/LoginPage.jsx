@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import { Button, Input, Card, Modal } from '../../components/common';
+import { useAuth } from '../context/AuthContext';
+import { Button, Input, Card, Modal } from '../../../shared/components/common';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');

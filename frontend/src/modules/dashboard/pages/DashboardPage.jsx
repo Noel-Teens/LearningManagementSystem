@@ -1,5 +1,5 @@
-import { useAuth } from '../../context/AuthContext';
-import { Card } from '../../components/common';
+import { useAuth } from '../../auth/context/AuthContext';
+import { Card } from '../../../shared/components/common';
 
 const DashboardPage = () => {
     const { user, isAdmin } = useAuth();

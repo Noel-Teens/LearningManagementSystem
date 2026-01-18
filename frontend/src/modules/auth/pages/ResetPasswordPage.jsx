@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Button, Input, Card } from '../../components/common';
-import api from '../../api/axios';
+import { Button, Input, Card } from '../../../shared/components/common';
+import api from '../../../shared/api/axios';
 import toast from 'react-hot-toast';
 
 const ResetPasswordPage = () => {
