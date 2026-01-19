@@ -11,16 +11,15 @@ const LoginPage = () => {
     const [showDeactivatedModal, setShowDeactivatedModal] = useState(false);
     const hasAttemptedLogin = useRef(false);
 
-    const { login, user } = useAuth();
+    const { login, logout, user } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
     useEffect(() => {
         if (user) {
             const isStaff = user.role === 'SuperAdmin' || user.role === 'Admin';
-            const defaultPath = isStaff ? '/admin/users' : '/under-development';
-            const from = location.state?.from?.pathname || defaultPath;
-            navigate(from, { replace: true });
+            const redirectPath = isStaff ? '/admin/users' : '/under-development';
+            navigate(redirectPath, { replace: true });
         }
     }, [user]);
 
@@ -57,15 +56,18 @@ const LoginPage = () => {
         setLoading(true);
 
         try {
+            // Clear any existing session before new login attempt
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+
             const result = await login(email, password);
             console.log('Login result:', result);
 
             if (result.success) {
                 setErrors({});
                 const isStaff = result.user.role === 'SuperAdmin' || result.user.role === 'Admin';
-                const defaultPath = isStaff ? '/admin/users' : '/under-development';
-                const from = location.state?.from?.pathname || defaultPath;
-                navigate(from, { replace: true });
+                const redirectPath = isStaff ? '/admin/users' : '/under-development';
+                navigate(redirectPath, { replace: true });
             } else {
                 console.log('Setting error:', result.error);
                 if (result.error && result.error.toLowerCase().includes('deactivated')) {
