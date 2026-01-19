@@ -244,8 +244,8 @@ const OrganizationSettingsPage = () => {
             {activeTab === 'branding' && (
                 <div className="space-y-6">
                     <Card title="Logo" subtitle="Your organization's logo">
-                        <div className="flex items-start space-x-6">
-                            <div className="w-24 h-24 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden border-2 border-dashed border-gray-300">
+                        <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
+                            <div className="w-32 h-32 sm:w-24 sm:h-24 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden border-2 border-dashed border-gray-300">
                                 {uploading ? (
                                     <div className="animate-spin rounded-full h-8 w-8 border-4 border-blue-600 border-t-transparent"></div>
                                 ) : formData.logoUrl ? (
@@ -256,7 +256,7 @@ const OrganizationSettingsPage = () => {
                                     </svg>
                                 )}
                             </div>
-                            <div className="flex-1 space-y-3">
+                            <div className="flex-1 space-y-3 text-center sm:text-left w-full">
                                 <div>
                                     <input
                                         ref={fileInputRef}
@@ -271,6 +271,7 @@ const OrganizationSettingsPage = () => {
                                         variant="outline"
                                         loading={uploading}
                                         disabled={uploading}
+                                        className="w-full sm:w-auto"
                                     >
                                         {uploading ? 'Uploading...' : 'Upload Logo'}
                                     </Button>
@@ -279,15 +280,15 @@ const OrganizationSettingsPage = () => {
                                     </p>
                                 </div>
                                 {formData.logoUrl && (
-                                    <div className="flex items-center space-x-2">
-                                        <span className="text-xs text-gray-500 truncate max-w-xs">
+                                    <div className="flex items-center justify-center sm:justify-start space-x-2">
+                                        <span className="text-xs text-gray-500 truncate max-w-xs hidden sm:block">
                                             {formData.logoUrl}
                                         </span>
                                         <button
                                             onClick={() => setFormData({ ...formData, logoUrl: '' })}
-                                            className="text-red-500 hover:text-red-700 text-xs"
+                                            className="text-red-500 hover:text-red-700 text-xs font-medium"
                                         >
-                                            Remove
+                                            Remove Logo
                                         </button>
                                     </div>
                                 )}

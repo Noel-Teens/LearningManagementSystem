@@ -26,10 +26,9 @@ const UserManagementPage = () => {
     const fetchUsers = async () => {
         try {
             const response = await api.get('/auth/users');
-            setUsers(response.data.data || []);
+            const filteredUsers = (response.data.data || []).filter(u => u.role !== 'SuperAdmin');
+            setUsers(filteredUsers);
         } catch (error) {
-            // If endpoint doesn't exist yet, show empty state
-            console.log('Users endpoint not available');
             setUsers([]);
         } finally {
             setLoading(false);

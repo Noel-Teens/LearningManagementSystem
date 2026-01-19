@@ -8,7 +8,7 @@ const Card = ({
 }) => {
     return (
         <div
-            className={`bg-white rounded-xl shadow-sm border border-gray-200 ${className}`}
+            className={`bg-white rounded-2xl shadow-sm hover:shadow-md border border-slate-100 transition-shadow duration-300 ${className}`}
             {...props}
         >
             {(title || subtitle) && (
