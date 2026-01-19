@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../modules/auth/context/AuthContext';
+import { useTheme } from '../../../context/ThemeContext';
 
 const AppShell = ({ children }) => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const { user, logout, isAdmin } = useAuth();
+    const { isDark } = useTheme();
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -21,27 +23,30 @@ const AppShell = ({ children }) => {
 
     // Filter navigation based on user role
     const navigation = allNavigation.filter(item => {
-        if (!item.roles) return true; // No role restriction, show to all
+        if (!item.roles) return true;
         return item.roles.includes(user?.role);
     });
 
     const isActive = (path) => location.pathname === path;
 
     return (
-        <div className="min-h-screen bg-slate-50">
+        <div className={`min-h-screen transition-colors duration-300 ${isDark ? 'bg-gray-900' : 'bg-slate-50'}`}>
             {/* Sidebar */}
             <aside
-                className={`fixed inset-y-0 left-0 z-40 w-72 bg-white border-r border-slate-200 transform transition-all duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-                    } lg:translate-x-0 overflow-y-auto`}
+                className={`fixed inset-y-0 left-0 z-40 w-72 transform transition-all duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+                    } lg:translate-x-0 overflow-y-auto ${isDark
+                        ? 'bg-gray-800 border-r border-gray-700'
+                        : 'bg-white border-r border-slate-200'
+                    }`}
             >
                 {/* Logo */}
-                <div className="h-20 flex items-center px-8 border-b border-slate-100">
+                <div className={`h-20 flex items-center px-8 border-b ${isDark ? 'border-gray-700' : 'border-slate-100'}`}>
                     <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center mr-3 shadow-lg shadow-indigo-100">
                         <span className="text-white font-bold text-xl">L</span>
                     </div>
                     <div>
-                        <span className="text-xl font-bold text-slate-900 leading-none block">LMS</span>
-                        <span className="text-xs font-medium text-slate-500 tracking-wider uppercase">Academy</span>
+                        <span className={`text-xl font-bold leading-none block ${isDark ? 'text-white' : 'text-slate-900'}`}>LMS</span>
+                        <span className={`text-xs font-medium tracking-wider uppercase ${isDark ? 'text-gray-400' : 'text-slate-500'}`}>Academy</span>
                     </div>
                 </div>
 
@@ -52,11 +57,20 @@ const AppShell = ({ children }) => {
                             key={item.name}
                             to={item.href}
                             className={`flex items-center px-4 py-3.5 rounded-2xl transition-all duration-200 group ${isActive(item.href)
-                                ? 'bg-indigo-50 text-indigo-700 shadow-sm shadow-indigo-100/50'
-                                : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                                    ? isDark
+                                        ? 'bg-indigo-900/50 text-indigo-400 shadow-sm'
+                                        : 'bg-indigo-50 text-indigo-700 shadow-sm shadow-indigo-100/50'
+                                    : isDark
+                                        ? 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                                 }`}
                         >
-                            <item.icon className={`w-5 h-5 mr-3.5 transition-colors ${isActive(item.href) ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-600'}`} />
+                            <item.icon className={`w-5 h-5 mr-3.5 transition-colors ${isActive(item.href)
+                                    ? 'text-indigo-500'
+                                    : isDark
+                                        ? 'text-gray-400 group-hover:text-gray-300'
+                                        : 'text-slate-400 group-hover:text-slate-600'
+                                }`} />
                             <span className="font-medium">{item.name}</span>
                         </Link>
                     ))}
@@ -66,10 +80,14 @@ const AppShell = ({ children }) => {
             {/* Main content */}
             <div className={`transition-all duration-300 ${sidebarOpen ? 'lg:ml-72' : ''}`}>
                 {/* Header */}
-                <header className="h-20 bg-white/80 backdrop-blur-md border-b border-slate-100 sticky top-0 z-30 flex items-center justify-between px-8">
+                <header className={`h-20 backdrop-blur-md border-b sticky top-0 z-30 flex items-center justify-between px-8 ${isDark
+                        ? 'bg-gray-800/80 border-gray-700'
+                        : 'bg-white/80 border-slate-100'
+                    }`}>
                     <button
                         onClick={() => setSidebarOpen(!sidebarOpen)}
-                        className="p-2.5 rounded-xl hover:bg-slate-100 text-slate-600 transition-colors lg:hidden"
+                        className={`p-2.5 rounded-xl transition-colors lg:hidden ${isDark ? 'hover:bg-gray-700 text-gray-400' : 'hover:bg-slate-100 text-slate-600'
+                            }`}
                     >
                         <MenuIcon className="w-6 h-6" />
                     </button>
@@ -79,16 +97,22 @@ const AppShell = ({ children }) => {
                     {/* User menu */}
                     <div className="flex items-center gap-6">
                         <div className="text-right hidden sm:block">
-                            <p className="text-sm font-bold text-slate-900">{user?.name}</p>
+                            <p className={`text-sm font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>{user?.name}</p>
                             <p className="text-xs font-medium text-indigo-600">{user?.role}</p>
                         </div>
-                        <div className="h-10 w-10 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-700 font-bold border border-indigo-200 overflow-hidden shadow-sm">
+                        <div className={`h-10 w-10 rounded-xl flex items-center justify-center font-bold border overflow-hidden shadow-sm ${isDark
+                                ? 'bg-indigo-900/50 text-indigo-400 border-indigo-800'
+                                : 'bg-indigo-100 text-indigo-700 border-indigo-200'
+                            }`}>
                             {user?.name?.charAt(0) || 'U'}
                         </div>
-                        <div className="w-px h-6 bg-slate-200" />
+                        <div className={`w-px h-6 ${isDark ? 'bg-gray-700' : 'bg-slate-200'}`} />
                         <button
                             onClick={handleLogout}
-                            className="p-2.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all duration-200 group"
+                            className={`p-2.5 rounded-xl transition-all duration-200 group ${isDark
+                                    ? 'text-gray-400 hover:text-rose-400 hover:bg-rose-900/30'
+                                    : 'text-slate-400 hover:text-rose-600 hover:bg-rose-50'
+                                }`}
                             title="Logout"
                         >
                             <LogoutIcon className="w-6 h-6 transition-transform group-hover:scale-110" />

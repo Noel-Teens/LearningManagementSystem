@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './modules/auth/context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 
 // Layout components
 import AppShell from './shared/components/layout/AppShell';
@@ -31,64 +32,66 @@ const DefaultRedirect = () => {
 function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            duration: 4000,
-            style: {
-              background: '#363636',
-              color: '#fff',
-            },
-            success: {
-              iconTheme: {
-                primary: '#10B981',
-                secondary: '#fff',
+      <ThemeProvider>
+        <AuthProvider>
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: '#363636',
+                color: '#fff',
               },
-            },
-            error: {
-              iconTheme: {
-                primary: '#EF4444',
-                secondary: '#fff',
+              success: {
+                iconTheme: {
+                  primary: '#10B981',
+                  secondary: '#fff',
+                },
               },
-            },
-          }}
-        />
+              error: {
+                iconTheme: {
+                  primary: '#EF4444',
+                  secondary: '#fff',
+                },
+              },
+            }}
+          />
 
-        <Routes>
-          {/* Public routes */}
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+          <Routes>
+            {/* Public routes */}
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
 
-          <Route path="/under-development" element={
-            <ProtectedRoute>
-              <UnderDevelopmentPage />
-            </ProtectedRoute>
-          } />
+            <Route path="/under-development" element={
+              <ProtectedRoute>
+                <UnderDevelopmentPage />
+              </ProtectedRoute>
+            } />
 
-          {/* Admin routes */}
-          <Route path="/admin/users" element={
-            <ProtectedRoute allowedRoles={['SuperAdmin', 'Admin']}>
-              <AppShell>
-                <UserManagementPage />
-              </AppShell>
-            </ProtectedRoute>
-          } />
+            {/* Admin routes */}
+            <Route path="/admin/users" element={
+              <ProtectedRoute allowedRoles={['SuperAdmin', 'Admin']}>
+                <AppShell>
+                  <UserManagementPage />
+                </AppShell>
+              </ProtectedRoute>
+            } />
 
-          <Route path="/admin/organization" element={
-            <ProtectedRoute allowedRoles={['SuperAdmin', 'Admin']}>
-              <AppShell>
-                <OrganizationSettingsPage />
-              </AppShell>
-            </ProtectedRoute>
-          } />
+            <Route path="/admin/organization" element={
+              <ProtectedRoute allowedRoles={['SuperAdmin', 'Admin']}>
+                <AppShell>
+                  <OrganizationSettingsPage />
+                </AppShell>
+              </ProtectedRoute>
+            } />
 
-          {/* Default redirect */}
-          <Route path="/" element={<DefaultRedirect />} />
-          <Route path="*" element={<DefaultRedirect />} />
-        </Routes>
-      </AuthProvider>
+            {/* Default redirect */}
+            <Route path="/" element={<DefaultRedirect />} />
+            <Route path="*" element={<DefaultRedirect />} />
+          </Routes>
+        </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 }

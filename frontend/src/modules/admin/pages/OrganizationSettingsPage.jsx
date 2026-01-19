@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { Button, Input, Card } from '../../../shared/components/common';
 import api from '../../../shared/api/axios';
 import toast from 'react-hot-toast';
+import { useTheme } from '../../../context/ThemeContext';
+
 
 const OrganizationSettingsPage = () => {
     const [loading, setLoading] = useState(true);
@@ -10,6 +12,9 @@ const OrganizationSettingsPage = () => {
     const [organization, setOrganization] = useState(null);
     const [activeTab, setActiveTab] = useState('profile');
     const fileInputRef = useRef(null);
+    const { refreshTheme, isDark } = useTheme();
+
+
 
     const [formData, setFormData] = useState({
         name: '',
@@ -134,6 +139,10 @@ const OrganizationSettingsPage = () => {
         setSaving(true);
         try {
             await api.put(`/organizations/${organization._id}/theme`, formData.theme);
+            // Refresh global theme
+            if (refreshTheme) {
+                await refreshTheme();
+            }
             toast.success('Theme updated successfully');
         } catch (error) {
             toast.error(error.response?.data?.error || 'Failed to save theme');
@@ -176,20 +185,22 @@ const OrganizationSettingsPage = () => {
         <div className="space-y-6">
             {/* Header */}
             <div>
-                <h1 className="text-2xl font-bold text-gray-900">Organization Settings</h1>
-                <p className="text-gray-500 mt-1">Configure your organization profile and settings</p>
+                <h1 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>Organization Settings</h1>
+                <p className={`mt-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Configure your organization profile and settings</p>
             </div>
 
             {/* Tabs */}
-            <div className="border-b border-gray-200">
+            <div className={`border-b ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
                 <nav className="flex space-x-8">
                     {tabs.map((tab) => (
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
                             className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === tab.id
-                                ? 'border-blue-600 text-blue-700'
-                                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                ? 'border-blue-600 text-blue-500'
+                                : isDark
+                                    ? 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-600'
+                                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                                 }`}
                         >
                             {tab.label}
@@ -305,23 +316,28 @@ const OrganizationSettingsPage = () => {
                                         theme: { ...formData.theme, mode: 'light' }
                                     })}
                                     className={`p-4 rounded-xl border-2 transition-all ${formData.theme.mode === 'light'
-                                            ? 'border-blue-600 bg-blue-50'
+                                        ? isDark
+                                            ? 'border-blue-500 bg-blue-900/30'
+                                            : 'border-blue-600 bg-blue-50'
+                                        : isDark
+                                            ? 'border-gray-600 hover:border-gray-500'
                                             : 'border-gray-200 hover:border-gray-300'
                                         }`}
                                 >
                                     <div className="flex items-center space-x-3">
-                                        <div className="w-12 h-12 bg-white border border-gray-200 rounded-lg flex items-center justify-center shadow-sm">
+                                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center shadow-sm ${isDark ? 'bg-gray-700 border border-gray-600' : 'bg-white border border-gray-200'
+                                            }`}>
                                             <svg className="w-6 h-6 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
                                                 <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" />
                                             </svg>
                                         </div>
                                         <div className="text-left">
-                                            <p className="font-medium text-gray-900">Light Mode</p>
-                                            <p className="text-sm text-gray-500">Clean, bright interface</p>
+                                            <p className={`font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>Light Mode</p>
+                                            <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Clean, bright interface</p>
                                         </div>
                                     </div>
                                     {formData.theme.mode === 'light' && (
-                                        <div className="mt-3 flex items-center text-blue-600 text-sm font-medium">
+                                        <div className="mt-3 flex items-center text-blue-500 text-sm font-medium">
                                             <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                                             </svg>
@@ -338,23 +354,27 @@ const OrganizationSettingsPage = () => {
                                         theme: { ...formData.theme, mode: 'dark' }
                                     })}
                                     className={`p-4 rounded-xl border-2 transition-all ${formData.theme.mode === 'dark'
-                                            ? 'border-blue-600 bg-blue-50'
+                                        ? isDark
+                                            ? 'border-blue-500 bg-blue-900/30'
+                                            : 'border-blue-600 bg-blue-50'
+                                        : isDark
+                                            ? 'border-gray-600 hover:border-gray-500'
                                             : 'border-gray-200 hover:border-gray-300'
                                         }`}
                                 >
                                     <div className="flex items-center space-x-3">
-                                        <div className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center shadow-sm">
+                                        <div className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center shadow-sm border border-gray-700">
                                             <svg className="w-6 h-6 text-indigo-400" fill="currentColor" viewBox="0 0 24 24">
                                                 <path fillRule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z" clipRule="evenodd" />
                                             </svg>
                                         </div>
                                         <div className="text-left">
-                                            <p className="font-medium text-gray-900">Dark Mode</p>
-                                            <p className="text-sm text-gray-500">Easy on the eyes</p>
+                                            <p className={`font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>Dark Mode</p>
+                                            <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Easy on the eyes</p>
                                         </div>
                                     </div>
                                     {formData.theme.mode === 'dark' && (
-                                        <div className="mt-3 flex items-center text-blue-600 text-sm font-medium">
+                                        <div className="mt-3 flex items-center text-blue-500 text-sm font-medium">
                                             <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                                             </svg>
