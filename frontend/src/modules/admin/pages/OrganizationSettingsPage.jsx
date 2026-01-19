@@ -18,8 +18,7 @@ const OrganizationSettingsPage = () => {
         address: '',
         logoUrl: '',
         theme: {
-            primaryColor: '#2563EB',
-            secondaryColor: '#10B981',
+            mode: 'light',
             fontFamily: 'Inter, sans-serif',
         },
         learningPolicies: {
@@ -47,8 +46,7 @@ const OrganizationSettingsPage = () => {
                     address: org.address || '',
                     logoUrl: org.logoUrl || '',
                     theme: org.theme || {
-                        primaryColor: '#2563EB',
-                        secondaryColor: '#10B981',
+                        mode: 'light',
                         fontFamily: 'Inter, sans-serif',
                     },
                     learningPolicies: org.learningPolicies || formData.learningPolicies,
@@ -296,51 +294,74 @@ const OrganizationSettingsPage = () => {
                         </div>
                     </Card>
 
-                    <Card title="Theme Colors" subtitle="Customize your platform's appearance">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Primary Color</label>
-                                <div className="flex items-center space-x-3">
-                                    <input
-                                        type="color"
-                                        value={formData.theme.primaryColor}
-                                        onChange={(e) => setFormData({
-                                            ...formData,
-                                            theme: { ...formData.theme, primaryColor: e.target.value }
-                                        })}
-                                        className="w-12 h-10 rounded cursor-pointer"
-                                    />
-                                    <Input
-                                        value={formData.theme.primaryColor}
-                                        onChange={(e) => setFormData({
-                                            ...formData,
-                                            theme: { ...formData.theme, primaryColor: e.target.value }
-                                        })}
-                                        className="flex-1"
-                                    />
-                                </div>
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Secondary Color</label>
-                                <div className="flex items-center space-x-3">
-                                    <input
-                                        type="color"
-                                        value={formData.theme.secondaryColor}
-                                        onChange={(e) => setFormData({
-                                            ...formData,
-                                            theme: { ...formData.theme, secondaryColor: e.target.value }
-                                        })}
-                                        className="w-12 h-10 rounded cursor-pointer"
-                                    />
-                                    <Input
-                                        value={formData.theme.secondaryColor}
-                                        onChange={(e) => setFormData({
-                                            ...formData,
-                                            theme: { ...formData.theme, secondaryColor: e.target.value }
-                                        })}
-                                        className="flex-1"
-                                    />
-                                </div>
+                    <Card title="Theme Mode" subtitle="Choose your platform's appearance">
+                        <div className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {/* Light Mode Option */}
+                                <button
+                                    type="button"
+                                    onClick={() => setFormData({
+                                        ...formData,
+                                        theme: { ...formData.theme, mode: 'light' }
+                                    })}
+                                    className={`p-4 rounded-xl border-2 transition-all ${formData.theme.mode === 'light'
+                                            ? 'border-blue-600 bg-blue-50'
+                                            : 'border-gray-200 hover:border-gray-300'
+                                        }`}
+                                >
+                                    <div className="flex items-center space-x-3">
+                                        <div className="w-12 h-12 bg-white border border-gray-200 rounded-lg flex items-center justify-center shadow-sm">
+                                            <svg className="w-6 h-6 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" />
+                                            </svg>
+                                        </div>
+                                        <div className="text-left">
+                                            <p className="font-medium text-gray-900">Light Mode</p>
+                                            <p className="text-sm text-gray-500">Clean, bright interface</p>
+                                        </div>
+                                    </div>
+                                    {formData.theme.mode === 'light' && (
+                                        <div className="mt-3 flex items-center text-blue-600 text-sm font-medium">
+                                            <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                            </svg>
+                                            Selected
+                                        </div>
+                                    )}
+                                </button>
+
+                                {/* Dark Mode Option */}
+                                <button
+                                    type="button"
+                                    onClick={() => setFormData({
+                                        ...formData,
+                                        theme: { ...formData.theme, mode: 'dark' }
+                                    })}
+                                    className={`p-4 rounded-xl border-2 transition-all ${formData.theme.mode === 'dark'
+                                            ? 'border-blue-600 bg-blue-50'
+                                            : 'border-gray-200 hover:border-gray-300'
+                                        }`}
+                                >
+                                    <div className="flex items-center space-x-3">
+                                        <div className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center shadow-sm">
+                                            <svg className="w-6 h-6 text-indigo-400" fill="currentColor" viewBox="0 0 24 24">
+                                                <path fillRule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z" clipRule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <div className="text-left">
+                                            <p className="font-medium text-gray-900">Dark Mode</p>
+                                            <p className="text-sm text-gray-500">Easy on the eyes</p>
+                                        </div>
+                                    </div>
+                                    {formData.theme.mode === 'dark' && (
+                                        <div className="mt-3 flex items-center text-blue-600 text-sm font-medium">
+                                            <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                            </svg>
+                                            Selected
+                                        </div>
+                                    )}
+                                </button>
                             </div>
                         </div>
                         <div className="mt-4">

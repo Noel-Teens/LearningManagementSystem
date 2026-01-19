@@ -14,13 +14,10 @@ const organizationSchema = new mongoose.Schema(
       default: '',
     },
     theme: {
-      primaryColor: {
+      mode: {
         type: String,
-        default: '#3B82F6',
-      },
-      secondaryColor: {
-        type: String,
-        default: '#10B981',
+        enum: ['light', 'dark'],
+        default: 'light',
       },
       fontFamily: {
         type: String,

@@ -76,15 +76,19 @@ exports.updateOrganization = async (req, res, next) => {
  */
 exports.updateTheme = async (req, res, next) => {
     try {
-        const { primaryColor, secondaryColor, fontFamily } = req.body;
+        const { mode, fontFamily } = req.body;
+
+        // Validate mode
+        if (mode && !['light', 'dark'].includes(mode)) {
+            return next(new ErrorResponse('Mode must be either light or dark', 400));
+        }
 
         const organization = await Organization.findByIdAndUpdate(
             req.params.id,
             {
                 theme: {
-                    primaryColor,
-                    secondaryColor,
-                    fontFamily,
+                    mode: mode || 'light',
+                    fontFamily: fontFamily || 'Inter, sans-serif',
                 },
             },
             {
