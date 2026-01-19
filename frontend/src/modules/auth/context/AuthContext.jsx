@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
             setUser(userData);
 
             toast.success(`Welcome back, ${userData.name}!`);
-            return { success: true };
+            return { success: true, user: userData };
         } catch (error) {
             const message = error.response?.data?.error || 'Invalid email or password';
             return { success: false, error: message };
