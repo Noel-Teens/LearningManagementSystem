@@ -18,7 +18,8 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
     }
 
     if (allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
-        return <Navigate to="/dashboard" replace />;
+        const isStaff = user.role === 'SuperAdmin' || user.role === 'Admin';
+        return <Navigate to={isStaff ? "/admin/users" : "/under-development"} replace />;
     }
 
     return children;
