@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import { AuthProvider } from './modules/auth/context/AuthContext';
+import { AuthProvider, useAuth } from './modules/auth/context/AuthContext';
 
 // Layout components
 import AppShell from './shared/components/layout/AppShell';
@@ -11,12 +11,22 @@ import LoginPage from './modules/auth/pages/LoginPage';
 import ForgotPasswordPage from './modules/auth/pages/ForgotPasswordPage';
 import ResetPasswordPage from './modules/auth/pages/ResetPasswordPage';
 
-// Dashboard
-import DashboardPage from './modules/dashboard/pages/DashboardPage';
+// Shared pages
+import UnderDevelopmentPage from './shared/pages/UnderDevelopmentPage';
 
 // Admin pages
 import UserManagementPage from './modules/admin/pages/UserManagementPage';
 import OrganizationSettingsPage from './modules/admin/pages/OrganizationSettingsPage';
+
+const DefaultRedirect = () => {
+  const { user, loading } = useAuth();
+
+  if (loading) return null;
+  if (!user) return <Navigate to="/login" replace />;
+
+  const isStaff = user.role === 'SuperAdmin' || user.role === 'Admin';
+  return <Navigate to={isStaff ? "/admin/users" : "/under-development"} replace />;
+};
 
 function App() {
   return (
@@ -51,12 +61,9 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
 
-          {/* Protected routes */}
-          <Route path="/dashboard" element={
+          <Route path="/under-development" element={
             <ProtectedRoute>
-              <AppShell>
-                <DashboardPage />
-              </AppShell>
+              <UnderDevelopmentPage />
             </ProtectedRoute>
           } />
 
@@ -78,8 +85,8 @@ function App() {
           } />
 
           {/* Default redirect */}
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/" element={<DefaultRedirect />} />
+          <Route path="*" element={<DefaultRedirect />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>

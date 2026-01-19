@@ -14,7 +14,6 @@ const AppShell = ({ children }) => {
     };
 
     const allNavigation = [
-        { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
         { name: 'My Courses', href: '/courses', icon: BookIcon, roles: ['Learner', 'Trainer'] },
         { name: 'User Management', href: '/admin/users', icon: UsersIcon, roles: ['SuperAdmin', 'Admin'] },
         { name: 'Organization', href: '/admin/organization', icon: BuildingIcon, roles: ['SuperAdmin', 'Admin'] },
@@ -29,75 +28,86 @@ const AppShell = ({ children }) => {
     const isActive = (path) => location.pathname === path;
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-slate-50">
             {/* Sidebar */}
             <aside
-                className={`fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200 transform transition-transform duration-200 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-                    } lg:translate-x-0`}
+                className={`fixed inset-y-0 left-0 z-40 w-72 bg-white border-r border-slate-200 transform transition-all duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+                    } lg:translate-x-0 overflow-y-auto`}
             >
                 {/* Logo */}
-                <div className="h-16 flex items-center px-6 border-b border-gray-200">
-                    <span className="text-xl font-bold text-blue-700">LMS</span>
-                    <span className="text-xl font-light text-gray-600 ml-1">Platform</span>
+                <div className="h-20 flex items-center px-8 border-b border-slate-100">
+                    <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center mr-3 shadow-lg shadow-indigo-100">
+                        <span className="text-white font-bold text-xl">L</span>
+                    </div>
+                    <div>
+                        <span className="text-xl font-bold text-slate-900 leading-none block">LMS</span>
+                        <span className="text-xs font-medium text-slate-500 tracking-wider uppercase">Academy</span>
+                    </div>
                 </div>
 
                 {/* Navigation */}
-                <nav className="p-4 space-y-1">
+                <nav className="p-6 space-y-2">
                     {navigation.map((item) => (
                         <Link
                             key={item.name}
                             to={item.href}
-                            className={`flex items-center px-4 py-2.5 rounded-lg transition-colors ${isActive(item.href)
-                                ? 'bg-blue-50 text-blue-700'
-                                : 'text-gray-600 hover:bg-gray-100'
+                            className={`flex items-center px-4 py-3.5 rounded-2xl transition-all duration-200 group ${isActive(item.href)
+                                ? 'bg-indigo-50 text-indigo-700 shadow-sm shadow-indigo-100/50'
+                                : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                                 }`}
                         >
-                            <item.icon className="w-5 h-5 mr-3" />
-                            {item.name}
+                            <item.icon className={`w-5 h-5 mr-3.5 transition-colors ${isActive(item.href) ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-600'}`} />
+                            <span className="font-medium">{item.name}</span>
                         </Link>
                     ))}
                 </nav>
             </aside>
 
             {/* Main content */}
-            <div className={`${sidebarOpen ? 'lg:ml-64' : ''}`}>
+            <div className={`transition-all duration-300 ${sidebarOpen ? 'lg:ml-72' : ''}`}>
                 {/* Header */}
-                <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6">
+                <header className="h-20 bg-white/80 backdrop-blur-md border-b border-slate-100 sticky top-0 z-30 flex items-center justify-between px-8">
                     <button
                         onClick={() => setSidebarOpen(!sidebarOpen)}
-                        className="lg:hidden p-2 rounded-lg hover:bg-gray-100"
+                        className="p-2.5 rounded-xl hover:bg-slate-100 text-slate-600 transition-colors lg:hidden"
                     >
-                        <MenuIcon className="w-5 h-5" />
+                        <MenuIcon className="w-6 h-6" />
                     </button>
 
                     <div className="flex-1" />
 
                     {/* User menu */}
-                    <div className="flex items-center gap-4">
-                        <div className="text-right">
-                            <p className="text-sm font-medium text-gray-900">{user?.name}</p>
-                            <p className="text-xs text-gray-500">{user?.role}</p>
+                    <div className="flex items-center gap-6">
+                        <div className="text-right hidden sm:block">
+                            <p className="text-sm font-bold text-slate-900">{user?.name}</p>
+                            <p className="text-xs font-medium text-indigo-600">{user?.role}</p>
                         </div>
+                        <div className="h-10 w-10 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-700 font-bold border border-indigo-200 overflow-hidden shadow-sm">
+                            {user?.name?.charAt(0) || 'U'}
+                        </div>
+                        <div className="w-px h-6 bg-slate-200" />
                         <button
                             onClick={handleLogout}
-                            className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            className="p-2.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all duration-200 group"
                             title="Logout"
                         >
-                            <LogoutIcon className="w-5 h-5" />
+                            <LogoutIcon className="w-6 h-6 transition-transform group-hover:scale-110" />
                         </button>
                     </div>
                 </header>
 
                 {/* Page content */}
-                <main className="p-6">
-                    {children}
+                <main className="p-8 max-w-7xl mx-auto">
+                    <div className="animate-in">
+                        {children}
+                    </div>
                 </main>
             </div>
 
             {/* Mobile sidebar overlay */}
             {sidebarOpen && (
                 <div
-                    className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+                    className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-30 lg:hidden transition-opacity duration-300"
                     onClick={() => setSidebarOpen(false)}
                 />
             )}
