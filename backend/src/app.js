@@ -4,6 +4,7 @@ const errorHandler = require('./middlewares/error');
 const authRoutes = require('./modules/auth/auth.routes');
 const organizationRoutes = require('./modules/organization/organization.routes');
 const uploadRoutes = require('./modules/upload/upload.routes');
+const courseRoutes = require('./modules/courses/course.routes');
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(cors());
 app.use('/api/auth', authRoutes);
 app.use('/api/organizations', organizationRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/courses', courseRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
