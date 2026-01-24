@@ -1,40 +1,51 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
-import { AuthProvider, useAuth } from './modules/auth/context/AuthContext';
-import { ThemeProvider } from './context/ThemeContext';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
-// Layout components
-import AppShell from './shared/components/layout/AppShell';
-import ProtectedRoute from './shared/components/layout/ProtectedRoute';
+import { AuthProvider, useAuth } from "./modules/auth/context/AuthContext";
+import { ThemeProvider } from "./context/ThemeContext";
 
-// Auth pages
-import LoginPage from './modules/auth/pages/LoginPage';
-import ForgotPasswordPage from './modules/auth/pages/ForgotPasswordPage';
-import ResetPasswordPage from './modules/auth/pages/ResetPasswordPage';
+// Layout & Protection
+import AppShell from "./shared/components/layout/AppShell";
+import ProtectedRoute from "./shared/components/layout/ProtectedRoute";
+
+// Auth pages (PUBLIC)
+import LoginPage from "./modules/auth/pages/LoginPage";
+import ForgotPasswordPage from "./modules/auth/pages/ForgotPasswordPage";
+import ResetPasswordPage from "./modules/auth/pages/ResetPasswordPage";
+
+// Knowledge Base pages
+import Search from "./pages/Search";
+import ArticleDetails from "./pages/ArticleDetails";
+import CreateArticle from "./pages/CreateArticle";
+import EditArticle from "./pages/EditArticle";
 
 // Admin pages
-import UserManagementPage from './modules/admin/pages/UserManagementPage';
-import OrganizationSettingsPage from './modules/admin/pages/OrganizationSettingsPage';
+import UserManagementPage from "./modules/admin/pages/UserManagementPage";
+import OrganizationSettingsPage from "./modules/admin/pages/OrganizationSettingsPage";
 
-// Course Management pages
-import CourseList from './modules/courses/pages/CourseList';
-import CourseBuilder from './modules/courses/pages/CourseBuilder';
-import TrashBin from './modules/courses/pages/TrashBin';
-import LessonViewer from './modules/courses/pages/LessonViewer';
+// Misc
+import UnderDevelopmentPage from "./shared/pages/UnderDevelopmentPage";
 
+/* ---------- Role-Based Default Redirect ---------- */
 const DefaultRedirect = () => {
   const { user, loading } = useAuth();
 
   if (loading) return null;
-  if (!user) return <Navigate to="/login" replace />;
 
-  // Trainers go to courses, staff to admin
-  if (user.role === 'Trainer') {
-    return <Navigate to="/courses" replace />;
+  if (!user) {
+    return <Navigate to="/auth/login" replace />;
   }
-  return <Navigate to="/admin/users" replace />;
+
+  const role = user.role?.toLowerCase();
+
+  if (role === "admin" || role === "superadmin") {
+    return <Navigate to="/admin/users" replace />;
+  }
+
+  return <Navigate to="/search" replace />;
 };
 
+/* ---------- App ---------- */
 function App() {
   return (
     <BrowserRouter>
@@ -44,90 +55,76 @@ function App() {
             position="top-right"
             toastOptions={{
               duration: 4000,
-              style: {
-                background: '#363636',
-                color: '#fff',
-              },
-              success: {
-                iconTheme: {
-                  primary: '#10B981',
-                  secondary: '#fff',
-                },
-              },
-              error: {
-                iconTheme: {
-                  primary: '#EF4444',
-                  secondary: '#fff',
-                },
-              },
+              style: { background: "#363636", color: "#fff" }
             }}
           />
 
           <Routes>
-            {/* Public routes */}
+            {/* ================= PUBLIC AUTH ROUTES ================= */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
 
-            {/* Admin routes */}
-            <Route path="/admin/users" element={
-              <ProtectedRoute allowedRoles={['SuperAdmin', 'Admin']}>
-                <AppShell>
-                  <UserManagementPage />
-                </AppShell>
-              </ProtectedRoute>
-            } />
+            {/* ================= PROTECTED APP ROUTES ================= */}
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <AppShell />
+                </ProtectedRoute>
+              }
+            >
+              {/* Default Landing */}
+              <Route index element={<DefaultRedirect />} />
 
-            <Route path="/admin/organization" element={
-              <ProtectedRoute allowedRoles={['SuperAdmin', 'Admin']}>
-                <AppShell>
-                  <OrganizationSettingsPage />
-                </AppShell>
-              </ProtectedRoute>
-            } />
+              {/* Knowledge Base */}
+              <Route path="search" element={<Search />} />
+              <Route path="article/:id" element={<ArticleDetails />} />
 
-            {/* Course Management routes (Trainer only) */}
-            <Route path="/courses" element={
-              <ProtectedRoute allowedRoles={['Trainer']}>
-                <AppShell>
-                  <CourseList />
-                </AppShell>
-              </ProtectedRoute>
-            } />
+              {/* Admin: Knowledge Base */}
+              <Route
+                path="admin/create"
+                element={
+                  <ProtectedRoute allowedRoles={["SuperAdmin", "Admin","Trainer"]}>
+                    <CreateArticle />
+                  </ProtectedRoute>
+                }
+              />
 
-            <Route path="/courses/create" element={
-              <ProtectedRoute allowedRoles={['Trainer']}>
-                <AppShell>
-                  <CourseBuilder />
-                </AppShell>
-              </ProtectedRoute>
-            } />
+              <Route
+                path="admin/edit/:id"
+                element={
+                  <ProtectedRoute allowedRoles={["SuperAdmin", "Admin","Trainer"]}>
+                    <EditArticle />
+                  </ProtectedRoute>
+                }
+              />
 
-            <Route path="/courses/trash" element={
-              <ProtectedRoute allowedRoles={['Trainer']}>
-                <AppShell>
-                  <TrashBin />
-                </AppShell>
-              </ProtectedRoute>
-            } />
+              {/* Admin: System */}
+              <Route
+                path="admin/users"
+                element={
+                  <ProtectedRoute allowedRoles={["SuperAdmin", "Admin"]}>
+                    <UserManagementPage />
+                  </ProtectedRoute>
+                }
+              />
 
-            <Route path="/courses/:courseId/edit" element={
-              <ProtectedRoute allowedRoles={['Trainer']}>
-                <AppShell>
-                  <CourseBuilder />
-                </AppShell>
-              </ProtectedRoute>
-            } />
+              <Route
+                path="admin/organization"
+                element={
+                  <ProtectedRoute allowedRoles={["SuperAdmin", "Admin"]}>
+                    <OrganizationSettingsPage />
+                  </ProtectedRoute>
+                }
+              />
 
-            <Route path="/courses/:courseId/modules/:moduleId/lessons/:lessonId" element={
-              <ProtectedRoute allowedRoles={['Trainer']}>
-                <LessonViewer />
-              </ProtectedRoute>
-            } />
+              {/* Misc */}
+              <Route path="under-development" element={<UnderDevelopmentPage />} />
+            </Route>
 
-            {/* Default redirect */}
-            <Route path="/" element={<DefaultRedirect />} />
-            <Route path="*" element={<DefaultRedirect />} />
+            {/* ================= FALLBACK ================= */}
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </AuthProvider>
       </ThemeProvider>

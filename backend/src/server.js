@@ -1,17 +1,13 @@
+const path = require('path');
+// This tells dotenv to look in the parent directory for the .env file
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') }); 
+
 const app = require('./app');
 const connectDB = require('./config/db');
 const { PORT } = require('./config/env');
 
-// Connect to database
 connectDB();
 
-const server = app.listen(PORT, () => {
-  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
-});
-
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (err, promise) => {
-  console.log(`Error: ${err.message}`);
-  // Close server & exit process
-  server.close(() => process.exit(1));
+const server = app.listen(PORT || 5000, () => {
+  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT || 5000}`);
 });

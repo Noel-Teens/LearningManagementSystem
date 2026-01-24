@@ -22,7 +22,6 @@ export const AuthProvider = ({ children }) => {
 
         if (token && storedUser) {
             setUser(JSON.parse(storedUser));
-            // Verify token is still valid
             getMe();
         } else {
             setLoading(false);
@@ -61,12 +60,19 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const logout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        setUser(null);
-        toast.success('Logged out successfully');
-    };
+    // Inside AuthContext.js
+const logout = () => {
+    // 1. Clear all data
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    
+    // 2. Reset state
+    setUser(null);
+
+    // 3. Force a hard redirect to the login page
+    // This prevents components from trying to render with null data
+    window.location.replace('/auth/login'); 
+};
 
     const register = async (userData) => {
         try {
@@ -80,36 +86,8 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const updatePassword = async (currentPassword, newPassword) => {
-        try {
-            await api.put('/auth/updatepassword', { currentPassword, newPassword });
-            toast.success('Password updated successfully');
-            return { success: true };
-        } catch (error) {
-            const message = error.response?.data?.error || 'Password update failed';
-            toast.error(message);
-            return { success: false, error: message };
-        }
-    };
-
-    const updateUserStatus = async (userId, isActive) => {
-        try {
-            const response = await api.put(`/auth/users/${userId}/status`, { isActive });
-            toast.success(`User ${isActive ? 'activated' : 'deactivated'} successfully`);
-            return { success: true, data: response.data };
-        } catch (error) {
-            const message = error.response?.data?.error || 'Status update failed';
-            toast.error(message);
-            return { success: false, error: message };
-        }
-    };
-
     const isAdmin = () => {
         return user?.role === 'SuperAdmin' || user?.role === 'Admin';
-    };
-
-    const isSuperAdmin = () => {
-        return user?.role === 'SuperAdmin';
     };
 
     const value = {
@@ -118,10 +96,7 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         register,
-        updatePassword,
-        updateUserStatus,
         isAdmin,
-        isSuperAdmin,
         getMe,
     };
 

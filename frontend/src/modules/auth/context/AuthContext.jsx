@@ -59,12 +59,19 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const logout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        setUser(null);
-        toast.success('Logged out successfully');
-    };
+    // Inside AuthContext.js
+const logout = () => {
+    // 1. Clear all data
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    
+    // 2. Reset state
+    setUser(null);
+
+    // 3. Force a hard redirect to the login page
+    // This prevents components from trying to render with null data
+    window.location.href='/login'; 
+};
 
     const register = async (userData) => {
         try {

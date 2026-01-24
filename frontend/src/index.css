@@ -1,20 +1,34 @@
 @import "tailwindcss";
 
+/* ================= BASE THEME ================= */
 @layer base {
   :root {
     --primary: 37 99 235;
     --primary-foreground: 255 255 255;
+
     --background: 255 255 255;
     --foreground: 9 9 11;
+
+    /* ===== SIDEBAR COLORS (MATCH IMAGE) ===== */
+    --sidebar-bg: 244 246 255;      /* #F4F6FF */
+    --sidebar-hover: 230 233 255;   /* #E6E9FF */
+    --sidebar-active: 99 102 241;   /* #6366F1 */
+    --sidebar-text: 55 65 81;       /* gray-700 */
+
     --font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
 
-  /* Dark mode variables */
   .dark {
     --primary: 96 165 250;
     --primary-foreground: 9 9 11;
+
     --background: 17 24 39;
     --foreground: 243 244 246;
+
+    --sidebar-bg: 17 24 39;
+    --sidebar-hover: 31 41 55;
+    --sidebar-active: 96 165 250;
+    --sidebar-text: 229 231 235;
   }
 
   * {
@@ -28,7 +42,6 @@
   body {
     @apply bg-gray-50 text-gray-900 antialiased;
     font-family: var(--font-family);
-    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   .dark body {
@@ -36,110 +49,36 @@
   }
 }
 
-/* Dark mode component overrides */
-.dark .bg-white {
-  @apply bg-gray-800;
-}
+/* ================= DARK MODE OVERRIDES ================= */
+.dark .bg-white { @apply bg-gray-800; }
+.dark .bg-gray-50 { @apply bg-gray-900; }
+.dark .bg-gray-100 { @apply bg-gray-800; }
+.dark .text-gray-900 { @apply text-gray-100; }
+.dark .text-gray-700 { @apply text-gray-300; }
+.dark .border-gray-200 { @apply border-gray-700; }
 
-.dark .bg-gray-50 {
-  @apply bg-gray-900;
-}
-
-.dark .bg-gray-100 {
-  @apply bg-gray-800;
-}
-
-.dark .text-gray-900 {
-  @apply text-gray-100;
-}
-
-.dark .text-gray-800 {
-  @apply text-gray-200;
-}
-
-.dark .text-gray-700 {
-  @apply text-gray-300;
-}
-
-.dark .text-gray-600 {
-  @apply text-gray-400;
-}
-
-.dark .text-gray-500 {
-  @apply text-gray-400;
-}
-
-.dark .border-gray-200 {
-  @apply border-gray-700;
-}
-
-.dark .border-gray-300 {
-  @apply border-gray-600;
-}
-
-/* Dark mode for inputs and selects */
-.dark input,
-.dark select,
-.dark textarea {
-  @apply bg-gray-700 border-gray-600 text-gray-100;
-}
-
-.dark input::placeholder,
-.dark textarea::placeholder {
-  @apply text-gray-400;
-}
-
-.dark input:focus,
-.dark select:focus,
-.dark textarea:focus {
-  @apply border-blue-500 ring-blue-500;
-}
-
-/* Dark mode for cards */
-.dark .shadow-sm {
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-}
-
-.dark .shadow-lg {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
-}
-
-/* Dark mode hover states */
-.dark .hover\:bg-gray-100:hover {
-  @apply bg-gray-700;
-}
-
-.dark .hover\:bg-gray-50:hover {
-  @apply bg-gray-800;
-}
-
+/* ================= SIDEBAR UTILITIES ================= */
 @layer utilities {
-  .glass {
-    @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-lg;
+  .sidebar-bg {
+    background-color: rgb(var(--sidebar-bg));
   }
 
-  .dark .glass {
-    @apply bg-gray-800/80 backdrop-blur-md border border-gray-700/20 shadow-lg;
+  .sidebar-item {
+    color: rgb(var(--sidebar-text));
   }
 
-  .animate-in {
-    animation: fadeIn 0.3s ease-out;
+  .sidebar-item:hover {
+    background-color: rgb(var(--sidebar-hover));
   }
 
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  .sidebar-active {
+    background-color: rgb(var(--sidebar-hover));
+    color: rgb(var(--sidebar-active));
+    font-weight: 600;
   }
 }
 
-/* Custom Scrollbar */
+/* ================= SCROLLBAR ================= */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -153,9 +92,9 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 rounded-full hover:bg-gray-400 transition-colors;
+  @apply bg-gray-300 rounded-full hover:bg-gray-400;
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  @apply bg-gray-600 rounded-full hover:bg-gray-500;
+  @apply bg-gray-600 hover:bg-gray-500;
 }

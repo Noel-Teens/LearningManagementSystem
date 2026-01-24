@@ -5,6 +5,8 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
     const { user, loading } = useAuth();
     const location = useLocation();
 
+    // 1. LOADING STATE
+    // Prevents redirecting to login while the session is still being checked
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -12,16 +14,33 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
             </div>
         );
     }
-
+    if (!loading && !user) {
+    return <Navigate to="/auth/login" state={{ from: location }} replace />;
+}
+    // 2. AUTHENTICATION CHECK
+    // If no user is found, send them to login and save the page they were trying to visit
     if (!user) {
-        return <Navigate to="/login" state={{ from: location }} replace />;
+        return <Navigate to="/auth/login" state={{ from: location }} replace />;
     }
 
-    if (allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
-        const isStaff = user.role === 'SuperAdmin' || user.role === 'Admin';
-        return <Navigate to={isStaff ? "/admin/users" : "/under-development"} replace />;
+    // 3. AUTHORIZATION CHECK (Role-Based Access)
+    // We normalize all strings to lowercase to prevent "Admin" vs "admin" mismatches
+    if (allowedRoles.length > 0) {
+        const currentUserRole = user.role?.toLowerCase().trim();
+        const isAllowed = allowedRoles.some(
+            (role) => role.toLowerCase().trim() === currentUserRole
+        );
+
+        if (!isAllowed) {
+            // If the user is blocked, redirect based on their role type
+            const isStaff = currentUserRole === 'superadmin' || currentUserRole === 'admin';
+            
+            // Admins go to User Management, everyone else goes to the Knowledge Base (Search)
+            return <Navigate to={isStaff ? "/admin/users" : "/search"} replace />;
+        }
     }
 
+    // 4. ACCESS GRANTED
     return children;
 };
 

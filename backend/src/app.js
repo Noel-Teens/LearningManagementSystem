@@ -4,7 +4,8 @@ const errorHandler = require('./middlewares/error');
 const authRoutes = require('./modules/auth/auth.routes');
 const organizationRoutes = require('./modules/organization/organization.routes');
 const uploadRoutes = require('./modules/upload/upload.routes');
-const courseRoutes = require('./modules/courses/course.routes');
+const authroutes = require("./routes/authRoutes");
+const articleRoutes = require("./routes/articleRoutes");
 
 const app = express();
 
@@ -18,9 +19,9 @@ app.use(cors());
 app.use('/api/auth', authRoutes);
 app.use('/api/organizations', organizationRoutes);
 app.use('/api/upload', uploadRoutes);
-app.use('/api/courses', courseRoutes);
+app.use("/api/auth", authroutes);
+app.use("/api/articles", articleRoutes);
 
-// Health check endpoint
 app.get('/api/health', (req, res) => {
     res.status(200).json({
         success: true,

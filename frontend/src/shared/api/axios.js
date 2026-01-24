@@ -29,13 +29,10 @@ api.interceptors.response.use(
             localStorage.removeItem('token');
             localStorage.removeItem('user');
 
-            const pathname = window.location.pathname;
-            const isPublicAuthPage = pathname === '/login' ||
-                                     pathname === '/forgot-password' ||
-                                     pathname.startsWith('/reset-password');
+            const isLoginPage = window.location.pathname === '/login';
             const isLoginRequest = error.config?.url?.includes('/auth/login');
 
-            if (!isPublicAuthPage && !isLoginRequest) {
+            if (!isLoginPage && !isLoginRequest) {
                 window.location.href = '/login';
             }
         }
