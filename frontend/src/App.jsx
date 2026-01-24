@@ -12,12 +12,15 @@ import LoginPage from './modules/auth/pages/LoginPage';
 import ForgotPasswordPage from './modules/auth/pages/ForgotPasswordPage';
 import ResetPasswordPage from './modules/auth/pages/ResetPasswordPage';
 
-// Shared pages
-import UnderDevelopmentPage from './shared/pages/UnderDevelopmentPage';
-
 // Admin pages
 import UserManagementPage from './modules/admin/pages/UserManagementPage';
 import OrganizationSettingsPage from './modules/admin/pages/OrganizationSettingsPage';
+
+// Course Management pages
+import CourseList from './modules/courses/pages/CourseList';
+import CourseBuilder from './modules/courses/pages/CourseBuilder';
+import TrashBin from './modules/courses/pages/TrashBin';
+import LessonViewer from './modules/courses/pages/LessonViewer';
 
 const DefaultRedirect = () => {
   const { user, loading } = useAuth();
@@ -25,8 +28,11 @@ const DefaultRedirect = () => {
   if (loading) return null;
   if (!user) return <Navigate to="/login" replace />;
 
-  const isStaff = user.role === 'SuperAdmin' || user.role === 'Admin';
-  return <Navigate to={isStaff ? "/admin/users" : "/under-development"} replace />;
+  // Trainers go to courses, staff to admin
+  if (user.role === 'Trainer') {
+    return <Navigate to="/courses" replace />;
+  }
+  return <Navigate to="/admin/users" replace />;
 };
 
 function App() {
@@ -63,12 +69,6 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
 
-            <Route path="/under-development" element={
-              <ProtectedRoute>
-                <UnderDevelopmentPage />
-              </ProtectedRoute>
-            } />
-
             {/* Admin routes */}
             <Route path="/admin/users" element={
               <ProtectedRoute allowedRoles={['SuperAdmin', 'Admin']}>
@@ -83,6 +83,45 @@ function App() {
                 <AppShell>
                   <OrganizationSettingsPage />
                 </AppShell>
+              </ProtectedRoute>
+            } />
+
+            {/* Course Management routes (Trainer only) */}
+            <Route path="/courses" element={
+              <ProtectedRoute allowedRoles={['Trainer']}>
+                <AppShell>
+                  <CourseList />
+                </AppShell>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/courses/create" element={
+              <ProtectedRoute allowedRoles={['Trainer']}>
+                <AppShell>
+                  <CourseBuilder />
+                </AppShell>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/courses/trash" element={
+              <ProtectedRoute allowedRoles={['Trainer']}>
+                <AppShell>
+                  <TrashBin />
+                </AppShell>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/courses/:courseId/edit" element={
+              <ProtectedRoute allowedRoles={['Trainer']}>
+                <AppShell>
+                  <CourseBuilder />
+                </AppShell>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/courses/:courseId/modules/:moduleId/lessons/:lessonId" element={
+              <ProtectedRoute allowedRoles={['Trainer']}>
+                <LessonViewer />
               </ProtectedRoute>
             } />
 
