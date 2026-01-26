@@ -22,10 +22,10 @@ import CourseBuilder from './modules/courses/pages/CourseBuilder';
 import TrashBin from './modules/courses/pages/TrashBin';
 import LessonViewer from './modules/courses/pages/LessonViewer';
 // Knowledge Base pages
-import Search from "./pages/Search";
-import ArticleDetails from "./pages/ArticleDetails";
-import CreateArticle from "./pages/CreateArticle";
-import EditArticle from "./pages/EditArticle";
+import Search from "./modules/article/Search";
+import ArticleDetails from "./modules/article/ArticleDetails";
+import CreateArticle from "./modules/article/CreateArticle";
+import EditArticle from "./modules/article/EditArticle";
 
 const DefaultRedirect = () => {
   const { user, loading } = useAuth();
