@@ -1,0 +1,219 @@
+@import "tailwindcss";
+
+/* =========================
+   BASE THEME
+========================= */
+@layer base {
+  :root {
+    --primary: 37 99 235;
+    --primary-foreground: 255 255 255;
+    --background: 255 255 255;
+    --foreground: 9 9 11;
+    --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  .dark {
+    --primary: 96 165 250;
+    --primary-foreground: 9 9 11;
+    --background: 17 24 39;
+    --foreground: 243 244 246;
+  }
+
+  * {
+    @apply border-gray-200;
+  }
+
+  .dark * {
+    @apply border-gray-700;
+  }
+
+  body {
+    @apply bg-gray-50 text-gray-900 antialiased;
+    font-family: var(--font-family);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin: 0;
+  }
+
+  .dark body {
+    @apply bg-gray-900 text-gray-100;
+  }
+}
+
+/* =========================
+   FULL PAGE LAYOUT
+========================= */
+
+/* Page background */
+.auth-page {
+  min-height: 100vh;
+  width: 100%;
+  background: #f5f7fb;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 24px;
+}
+
+/* Full-width content container (NOT a box) */
+.auth-card {
+  width: 100%;
+  max-width: 1200px;
+  min-height: calc(100vh - 80px);
+
+  background: #ffffff;
+  padding: 40px;
+
+  border-radius: 0;   /* removes box shape */
+  box-shadow: none;   /* removes card effect */
+}
+
+/* =========================
+   TYPOGRAPHY
+========================= */
+
+.auth-title {
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.auth-subtitle {
+  text-align: center;
+  color: #6b7280;
+  margin-bottom: 28px;
+  font-size: 15px;
+}
+
+/* =========================
+   INPUTS
+========================= */
+
+.auth-input {
+  width: 100%;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+  margin-bottom: 18px;
+  font-size: 16px;
+  outline: none;
+}
+
+.auth-input:focus {
+  border-color: #4f46e5;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.primary-btn {
+  width: 100%;
+  padding: 16px;
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 17px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 22px;
+}
+
+.primary-btn:hover {
+  background-color: #4338ca;
+}
+
+.secondary-btn {
+  width: 100%;
+  padding: 14px;
+  background: #e0e7ff;
+  color: #3730a3;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  cursor: pointer;
+  margin-top: 14px;
+}
+
+.secondary-btn:hover {
+  background: #c7d2fe;
+}
+
+/* =========================
+   ARTICLE STYLES
+========================= */
+
+.article-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+.article-item {
+  margin-bottom: 18px;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.article-link {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.article-link:hover {
+  text-decoration: underline;
+}
+
+.tag {
+  margin-right: 8px;
+  color: #4f46e5;
+  font-size: 14px;
+}
+
+/* =========================
+   DELETE BUTTON STYLES
+========================= */
+
+.delete-box {
+  background-color: #6042f2;
+  border: 1px solid #1f11b7;
+  padding: 14px;
+  border-radius: 12px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.danger-btn {
+  background-color: #1e40af;
+  color: white !important;
+  padding: 10px 18px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.danger-btn:hover {
+  background-color: #1e3a8a;
+}
+
+/* =========================
+   DARK MODE OVERRIDES
+========================= */
+
+.dark .auth-page {
+  background: #111827;
+}
+
+.dark .auth-card {
+  background: #020617;
+}
+
+.dark .delete-box {
+  background-color: #4338ca;
+  border-color: #312e81;
+}
