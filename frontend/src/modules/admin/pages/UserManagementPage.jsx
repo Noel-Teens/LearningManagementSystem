@@ -142,11 +142,11 @@ const UserManagementPage = () => {
                                 </tr>
                             ) : (
                                 users.map((user) => (
-                                    <tr key={user._id} className="hover:bg-gray-50">
+                                    <tr key={user._id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                                         <td className="px-6 py-4">
                                             <div>
-                                                <div className="font-medium text-gray-900">{user.name}</div>
-                                                <div className="text-sm text-gray-500">{user.email}</div>
+                                                <div className="font-medium text-gray-900 dark:text-gray-100">{user.name}</div>
+                                                <div className="text-sm text-gray-500 dark:text-gray-400">{user.email}</div>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
