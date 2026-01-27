@@ -38,10 +38,15 @@ exports.createCourse = async (req, res, next) => {
  */
 exports.getCourses = async (req, res, next) => {
     try {
-        const courses = await Course.find({
-            trainerId: req.user._id,
-            isDeleted: false,
-        }).sort({ createdAt: -1 });
+        let query = { isDeleted: false };
+
+        // If user is Trainer, only show their courses
+        if (req.user.role === 'Trainer') {
+            query.trainerId = req.user._id;
+        }
+        // If Admin/SuperAdmin, they see all courses (query remains without trainerId)
+
+        const courses = await Course.find(query).sort({ createdAt: -1 });
 
         res.status(200).json({
             success: true,
@@ -60,11 +65,17 @@ exports.getCourses = async (req, res, next) => {
  */
 exports.getCourse = async (req, res, next) => {
     try {
-        const course = await Course.findOne({
+        let query = {
             _id: req.params.courseId,
-            trainerId: req.user._id,
             isDeleted: false,
-        });
+        };
+
+        // If Trainer, restrict to own course
+        if (req.user.role === 'Trainer') {
+            query.trainerId = req.user._id;
+        }
+
+        const course = await Course.findOne(query);
 
         if (!course) {
             return next(new ErrorResponse('Course not found', 404));

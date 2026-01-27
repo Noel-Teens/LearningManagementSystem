@@ -46,50 +46,49 @@ const upload = multer({
     },
 });
 
-// All routes require authentication and Trainer role
+// All routes require authentication
 router.use(protect);
-router.use(authorize('Trainer'));
 
 // =============================================================================
-// FILE UPLOAD
+// FILE UPLOAD (Trainer only)
 // =============================================================================
-router.post('/upload', upload.single('file'), uploadFile);
+router.post('/upload', authorize('Trainer'), upload.single('file'), uploadFile);
 
 // =============================================================================
-// TRASH BIN (must be before /:courseId to avoid conflict)
+// TRASH BIN (Trainer only)
 // =============================================================================
-router.get('/trash', getTrashBin);
+router.get('/trash', authorize('Trainer'), getTrashBin);
 
 // =============================================================================
 // COURSE ROUTES
 // =============================================================================
 router.route('/')
-    .get(getCourses)
-    .post(createCourse);
+    .get(authorize('Trainer', 'Admin', 'SuperAdmin'), getCourses)
+    .post(authorize('Trainer'), createCourse);
 
 router.route('/:courseId')
-    .get(getCourse)
-    .put(updateCourse)
-    .delete(softDeleteCourse);
+    .get(authorize('Trainer', 'Admin', 'SuperAdmin'), getCourse)
+    .put(authorize('Trainer'), updateCourse)
+    .delete(authorize('Trainer'), softDeleteCourse);
 
-router.patch('/:courseId/publish', togglePublishStatus);
-router.patch('/:courseId/restore', restoreCourse);
-router.delete('/:courseId/permanent', permanentDeleteCourse);
-
-// =============================================================================
-// MODULE ROUTES
-// =============================================================================
-router.post('/:courseId/modules', addModule);
-router.put('/:courseId/modules/:moduleId', updateModule);
-router.delete('/:courseId/modules/:moduleId', softDeleteModule);
-router.patch('/:courseId/modules/:moduleId/restore', restoreModule);
+router.patch('/:courseId/publish', authorize('Trainer'), togglePublishStatus);
+router.patch('/:courseId/restore', authorize('Trainer'), restoreCourse);
+router.delete('/:courseId/permanent', authorize('Trainer'), permanentDeleteCourse);
 
 // =============================================================================
-// LESSON ROUTES
+// MODULE ROUTES (Trainer only)
 // =============================================================================
-router.post('/:courseId/modules/:moduleId/lessons', addLesson);
-router.put('/:courseId/modules/:moduleId/lessons/:lessonId', updateLesson);
-router.delete('/:courseId/modules/:moduleId/lessons/:lessonId', softDeleteLesson);
-router.patch('/:courseId/modules/:moduleId/lessons/:lessonId/restore', restoreLesson);
+router.post('/:courseId/modules', authorize('Trainer'), addModule);
+router.put('/:courseId/modules/:moduleId', authorize('Trainer'), updateModule);
+router.delete('/:courseId/modules/:moduleId', authorize('Trainer'), softDeleteModule);
+router.patch('/:courseId/modules/:moduleId/restore', authorize('Trainer'), restoreModule);
+
+// =============================================================================
+// LESSON ROUTES (Trainer only)
+// =============================================================================
+router.post('/:courseId/modules/:moduleId/lessons', authorize('Trainer'), addLesson);
+router.put('/:courseId/modules/:moduleId/lessons/:lessonId', authorize('Trainer'), updateLesson);
+router.delete('/:courseId/modules/:moduleId/lessons/:lessonId', authorize('Trainer'), softDeleteLesson);
+router.patch('/:courseId/modules/:moduleId/lessons/:lessonId/restore', authorize('Trainer'), restoreLesson);
 
 module.exports = router;
