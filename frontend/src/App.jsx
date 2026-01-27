@@ -21,24 +21,32 @@ import CourseList from './modules/courses/pages/CourseList';
 import CourseBuilder from './modules/courses/pages/CourseBuilder';
 import TrashBin from './modules/courses/pages/TrashBin';
 import LessonViewer from './modules/courses/pages/LessonViewer';
+
 // Knowledge Base pages
 import Search from "./modules/article/Search";
 import ArticleDetails from "./modules/article/ArticleDetails";
 import CreateArticle from "./modules/article/CreateArticle";
 import EditArticle from "./modules/article/EditArticle";
 
+// Enrollment & Learning pages
+import AdminEnrollmentPage from "./modules/Enrollment/pages/AdminEnrollmentPage";
+import EnrolledCoursesPage from "./modules/Enrollment/pages/EnrolledCoursesPage";
+import CourseLearningPage from "./modules/Enrollment/pages/CourseLearningPage";
+
 const DefaultRedirect = () => {
   const { user, loading } = useAuth();
 
   if (loading) return null;
   if (!user) return <Navigate to="/login" replace />;
-    const role = user.role?.toLowerCase();
-  // Trainers go to courses, staff to admin
-  if (user.role === 'trainer') {
+
+  const role = user.role?.toLowerCase();
+  // Trainers go to courses, Learners to enrolled courses, Admin to users
+  if (role === 'trainer') {
     return <Navigate to="/courses" replace />;
   }
   if (role === 'learner') {
-    return <Navigate to="/search" replace />; }
+    return <Navigate to="/learner/courses" replace />;
+  }
   return <Navigate to="/admin/users" replace />;
 };
 
@@ -131,34 +139,65 @@ function App() {
                 <LessonViewer />
               </ProtectedRoute>
             } />
-            
+
             {/* Knowledge Base */}
-              <Route path="/search" element={<AppShell><Search /></AppShell>} />
-              <Route path="/article/:id" element={<AppShell><ArticleDetails /></AppShell>} />
+            <Route path="/search" element={<AppShell><Search /></AppShell>} />
+            <Route path="/article/:id" element={<AppShell><ArticleDetails /></AppShell>} />
 
-              {/* Admin: Knowledge Base */}
-              <Route
-                path="/admin/create"
-                element={
-                  <ProtectedRoute allowedRoles={["SuperAdmin", "Admin","Trainer"]}>
-                    <AppShell>
+            {/* Admin: Knowledge Base */}
+            <Route
+              path="/admin/create"
+              element={
+                <ProtectedRoute allowedRoles={["SuperAdmin", "Admin", "Trainer"]}>
+                  <AppShell>
                     <CreateArticle />
-                    </AppShell>
-                  </ProtectedRoute>
-                }
-              />
-             <Route
-                path="/admin/edit/:id"
-                element={
-                  <ProtectedRoute allowedRoles={["SuperAdmin", "Admin","Trainer"]}>
-                    <AppShell><EditArticle /></AppShell>
-                  </ProtectedRoute>
-                }
-              />
+                  </AppShell>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/edit/:id"
+              element={
+                <ProtectedRoute allowedRoles={["SuperAdmin", "Admin", "Trainer"]}>
+                  <AppShell><EditArticle /></AppShell>
+                </ProtectedRoute>
+              }
+            />
+            {/* Admin Enrollment Management */}
+            <Route
+              path="/admin/enrollments"
+              element={
+                <ProtectedRoute allowedRoles={["Admin", "SuperAdmin"]}>
+                  <AppShell>
+                    <AdminEnrollmentPage />
+                  </AppShell>
+                </ProtectedRoute>
+              }
+            />
 
-              {/* Default + fallback */}
-<Route path="/" element={<DefaultRedirect />} />
+            {/* Learner routes */}
+            <Route
+              path="/learner/courses"
+              element={
+                <ProtectedRoute allowedRoles={["Learner"]}>
+                  <AppShell>
+                    <EnrolledCoursesPage />
+                  </AppShell>
+                </ProtectedRoute>
+              }
+            />
 
+            <Route
+              path="/learner/courses/:courseId/learn"
+              element={
+                <ProtectedRoute allowedRoles={["Learner"]}>
+                  <CourseLearningPage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Default redirect */}
+            <Route path="/" element={<DefaultRedirect />} />
 
           </Routes>
         </AuthProvider>

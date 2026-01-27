@@ -6,6 +6,7 @@ const organizationRoutes = require('./modules/organization/organization.routes')
 const uploadRoutes = require('./modules/upload/upload.routes');
 const courseRoutes = require('./modules/courses/course.routes');
 const articleRoutes = require("./modules/article/article.routes");
+const enrollmentRoutes = require("./modules/Enrollment/enrollment.routes");
 const app = express();
 
 // Body parser
@@ -20,6 +21,7 @@ app.use('/api/organizations', organizationRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/courses', courseRoutes);
 app.use("/api/articles", articleRoutes);
+app.use("/api/enrollments", enrollmentRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
