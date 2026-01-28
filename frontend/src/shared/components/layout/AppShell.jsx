@@ -16,9 +16,15 @@ const AppShell = ({ children }) => {
     };
 
     const allNavigation = [
-        { name: 'My Courses', href: '/courses', icon: BookIcon, roles: ['Learner', 'Trainer'] },
+        // Trainer navigation
+        { name: 'My Courses', href: '/courses', icon: BookIcon, roles: ['Trainer'] },
+        // Admin navigation
         { name: 'User Management', href: '/admin/users', icon: UsersIcon, roles: ['SuperAdmin', 'Admin'] },
+        { name: 'Enrollments', href: '/admin/enrollments', icon: UsersIcon, roles: ['SuperAdmin', 'Admin'] },
         { name: 'Organization', href: '/admin/organization', icon: BuildingIcon, roles: ['SuperAdmin', 'Admin'] },
+        // Learner navigation
+        { name: 'My Courses', href: '/learner/courses', icon: BookIcon, roles: ['Learner'] },
+        // Shared navigation
         { name: "Knowledge Base", href: "/search", icon: BookIcon, roles: ["SuperAdmin", "Admin", "Trainer", "Learner"] },
     ];
 
@@ -58,19 +64,19 @@ const AppShell = ({ children }) => {
                             key={item.name}
                             to={item.href}
                             className={`flex items-center px-4 py-3.5 rounded-2xl transition-all duration-200 group ${isActive(item.href)
-                                    ? isDark
-                                        ? 'bg-indigo-900/50 text-indigo-400 shadow-sm'
-                                        : 'bg-indigo-50 text-indigo-700 shadow-sm shadow-indigo-100/50'
-                                    : isDark
-                                        ? 'text-gray-300 hover:bg-gray-700 hover:text-white'
-                                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                                ? isDark
+                                    ? 'bg-indigo-900/50 text-indigo-400 shadow-sm'
+                                    : 'bg-indigo-50 text-indigo-700 shadow-sm shadow-indigo-100/50'
+                                : isDark
+                                    ? 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                                 }`}
                         >
                             <item.icon className={`w-5 h-5 mr-3.5 transition-colors ${isActive(item.href)
-                                    ? 'text-indigo-500'
-                                    : isDark
-                                        ? 'text-gray-400 group-hover:text-gray-300'
-                                        : 'text-slate-400 group-hover:text-slate-600'
+                                ? 'text-indigo-500'
+                                : isDark
+                                    ? 'text-gray-400 group-hover:text-gray-300'
+                                    : 'text-slate-400 group-hover:text-slate-600'
                                 }`} />
                             <span className="font-medium">{item.name}</span>
                         </Link>
@@ -82,8 +88,8 @@ const AppShell = ({ children }) => {
             <div className={`transition-all duration-300 ${sidebarOpen ? 'lg:ml-72' : ''}`}>
                 {/* Header */}
                 <header className={`h-20 backdrop-blur-md border-b sticky top-0 z-30 flex items-center justify-between px-8 ${isDark
-                        ? 'bg-gray-800/80 border-gray-700'
-                        : 'bg-white/80 border-slate-100'
+                    ? 'bg-gray-800/80 border-gray-700'
+                    : 'bg-white/80 border-slate-100'
                     }`}>
                     <button
                         onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -102,8 +108,8 @@ const AppShell = ({ children }) => {
                             <p className="text-xs font-medium text-indigo-600">{user?.role}</p>
                         </div>
                         <div className={`h-10 w-10 rounded-xl flex items-center justify-center font-bold border overflow-hidden shadow-sm ${isDark
-                                ? 'bg-indigo-900/50 text-indigo-400 border-indigo-800'
-                                : 'bg-indigo-100 text-indigo-700 border-indigo-200'
+                            ? 'bg-indigo-900/50 text-indigo-400 border-indigo-800'
+                            : 'bg-indigo-100 text-indigo-700 border-indigo-200'
                             }`}>
                             {user?.name?.charAt(0) || 'U'}
                         </div>
@@ -111,8 +117,8 @@ const AppShell = ({ children }) => {
                         <button
                             onClick={handleLogout}
                             className={`p-2.5 rounded-xl transition-all duration-200 group ${isDark
-                                    ? 'text-gray-400 hover:text-rose-400 hover:bg-rose-900/30'
-                                    : 'text-slate-400 hover:text-rose-600 hover:bg-rose-50'
+                                ? 'text-gray-400 hover:text-rose-400 hover:bg-rose-900/30'
+                                : 'text-slate-400 hover:text-rose-600 hover:bg-rose-50'
                                 }`}
                             title="Logout"
                         >
@@ -128,8 +134,8 @@ const AppShell = ({ children }) => {
                     </div>
                 </main>
                 <main className="p-8 max-w-7xl mx-auto">
-          <Outlet />
-        </main>
+                    <Outlet />
+                </main>
             </div>
 
             {/* Mobile sidebar overlay */}
