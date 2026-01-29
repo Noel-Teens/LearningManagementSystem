@@ -1,78 +1,158 @@
-/* Page background */
-.auth-page {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+/* =========================
+   RESET
+========================= */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
   background: #f5f7fb;
+  font-family: Arial, sans-serif;
+  overflow-x: hidden;
 }
 
-/* Card */
+/* =========================
+   PAGE CONTAINER
+   (Below Fixed Header)
+========================= */
+.auth-page {
+  width: 100%;
+  min-height: calc(100vh - 64px); /* header height */
+  margin-top: 64px;               /* push below header */
+
+  /* SAFE SPACING */
+  padding: 24px 96px 32px 32px;   /* extra right padding for logout */
+
+  /* PREVENT OVERFLOW */
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+
+  box-sizing: border-box;
+}
+
+/* =========================
+   CONTENT WRAPPER
+========================= */
 .auth-card {
-  background: #ffffff;
-  width: 560px;
-  padding: 42px;
-  border-radius: 18px;
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  overflow-x: hidden;
 }
 
-/* Title */
+/* =========================
+   TITLES
+========================= */
 .auth-title {
-  text-align: center;
   font-size: 26px;
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: 6px;
+  color: #1f2937;
 }
 
-/* Subtitle */
 .auth-subtitle {
-  text-align: center;
-  color: #6b7280;
-  margin-bottom: 28px;
-}
-
-/* Labels */
-.form-label {
-  display: block;
-  margin-bottom: 6px;
   font-size: 14px;
-  font-weight: 500;
+  color: #6b7280;
+  margin-bottom: 24px;
 }
 
-/* Inputs */
-.auth-input {
+/* =========================
+   INPUTS
+========================= */
+.auth-input,
+.auth-textarea,
+.auth-file-input {
   width: 100%;
-  padding: 14px;
-  border-radius: 12px;
+  padding: 12px;
+  font-size: 14px;
+  border-radius: 8px;
   border: 1px solid #d1d5db;
-  margin-bottom: 18px;
-  font-size: 15px;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+  background: #ffffff;
 }
 
-/* Textarea */
 .auth-textarea {
-  width: 100%;
-  min-height: 120px;
-  padding: 14px;
-  border-radius: 12px;
-  border: 1px solid #d1d5db;
-  margin-bottom: 22px;
-  font-size: 15px;
+  min-height: 160px;
   resize: vertical;
 }
 
-/* Button */
-.primary-btn {
-  width: 100%;
-  padding: 16px;
-  background-color: #4f46e5;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 16px;
+/* =========================
+   FILE LABEL
+========================= */
+.file-label {
+  font-size: 13px;
+  margin-bottom: 6px;
+  display: block;
+  color: #374151;
+}
+
+/* =========================
+   TABS
+========================= */
+.tabs {
+  display: flex;
+  gap: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 24px;
+}
+
+.tab-button {
+  padding: 10px 4px;
+  font-size: 14px;
   cursor: pointer;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #374151;
+}
+
+.tab-button.active {
+  font-weight: 600;
+  color: #2563eb;
+  border-bottom: 2px solid #2563eb;
+}
+
+/* =========================
+   MEDIA SECTIONS
+========================= */
+.media-tabs {
+  margin-top: 16px;
+}
+
+.media-tab {
+  margin-top: 12px;
+}
+
+/* =========================
+   BUTTON
+========================= */
+.primary-btn {
+  margin-top: 24px;
+  padding: 14px 20px;
+  font-size: 15px;
+  border: none;
+  border-radius: 8px;
+  background-color: #2563eb;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background 0.2s ease;
 }
 
 .primary-btn:hover {
-  background-color: #4338ca;
+  background-color: #1d4ed8;
+}
+
+/* =========================
+   RESPONSIVE FIX
+========================= */
+@media (max-width: 768px) {
+  .auth-page {
+    padding: 20px 16px;
+    max-width: 100%;
+  }
 }
