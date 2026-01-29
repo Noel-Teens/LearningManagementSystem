@@ -1,152 +1,158 @@
-/* Full viewport page, no centering, no shadow */
-.auth-page {
-  min-height: 100vh;
-  width: 100vw;
-  background: #f5f7fb;
-  padding: 20px 40px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Remove auth-card shadow and background - just padding */
-.auth-card {
-  background: transparent;
-  width: 100%;
-  max-width: 100%; /* full width */
+/* =========================
+   RESET
+========================= */
+html, body {
+  margin: 0;
   padding: 0;
-  border-radius: 0;
-  box-shadow: none;
+  width: 100%;
+  height: 100%;
+  background: #f5f7fb;
+  font-family: Arial, sans-serif;
+  overflow-x: hidden;
 }
 
-/* Title and subtitle with spacing */
+/* =========================
+   PAGE CONTAINER
+   (Below Fixed Header)
+========================= */
+.auth-page {
+  width: 100%;
+  min-height: calc(100vh - 64px); /* header height */
+  margin-top: 64px;               /* push below header */
+
+  /* SAFE SPACING */
+  padding: 24px 96px 32px 32px;   /* extra right padding for logout */
+
+  /* PREVENT OVERFLOW */
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+
+  box-sizing: border-box;
+}
+
+/* =========================
+   CONTENT WRAPPER
+========================= */
+.auth-card {
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  overflow-x: hidden;
+}
+
+/* =========================
+   TITLES
+========================= */
 .auth-title {
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 700;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   color: #1f2937;
 }
 
 .auth-subtitle {
-  font-size: 16px;
+  font-size: 14px;
   color: #6b7280;
   margin-bottom: 24px;
 }
 
-/* Tabs container - flex with border bottom */
-.tabs {
-  display: flex;
-  border-bottom: 2px solid #e5e7eb;
-  margin-bottom: 24px;
-}
-
-/* Tab buttons with real tab style */
-.tab-button {
-  padding: 12px 24px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 16px;
-  border: none;
-  background: none;
-  color: #6b7280;
-  border-bottom: 4px solid transparent;
-  transition: all 0.3s ease;
-  user-select: none;
-  margin-right: 8px;
-}
-
-.tab-button:hover {
-  color: #4f46e5;
-}
-
-.tab-button.active {
-  color: #4f46e5;
-  border-bottom-color: #4f46e5;
-  font-weight: 700;
-}
-
-/* Container for tab content */
-.tab-content {
-  flex-grow: 1; /* fill remaining space if needed */
-  width: 100%;
-}
-
-/* Inputs styling - full width, no shadows */
+/* =========================
+   INPUTS
+========================= */
 .auth-input,
 .auth-textarea,
 .auth-file-input {
   width: 100%;
-  padding: 14px;
-  font-size: 16px;
+  padding: 12px;
+  font-size: 14px;
+  border-radius: 8px;
   border: 1px solid #d1d5db;
-  border-radius: 8px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   box-sizing: border-box;
-  font-family: inherit;
-  background: #fff;
+  background: #ffffff;
+}
+
+.auth-textarea {
+  min-height: 160px;
   resize: vertical;
-  transition: border-color 0.3s;
 }
 
-.auth-input:focus,
-.auth-textarea:focus,
-.auth-file-input:focus {
-  border-color: #4f46e5;
-  outline: none;
-}
-
-/* File input label styling */
+/* =========================
+   FILE LABEL
+========================= */
 .file-label {
-  font-weight: 600;
-  color: #374151;
-  margin-bottom: 8px;
+  font-size: 13px;
+  margin-bottom: 6px;
   display: block;
+  color: #374151;
+}
+
+/* =========================
+   TABS
+========================= */
+.tabs {
+  display: flex;
+  gap: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 24px;
+}
+
+.tab-button {
+  padding: 10px 4px;
+  font-size: 14px;
   cursor: pointer;
-}
-
-/* Media preview */
-.media-preview img,
-.media-preview video {
-  max-width: 100%;
-  max-height: 320px;
-  border-radius: 12px;
-  margin-top: 12px;
-  object-fit: contain;
-}
-
-/* Primary button full width */
-.primary-btn {
-  width: 100%;
-  padding: 16px;
-  background-color: #4f46e5;
-  color: white;
+  background: none;
   border: none;
-  border-radius: 8px;
-  font-size: 18px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  margin-top: 16px;
+  border-bottom: 2px solid transparent;
+  color: #374151;
 }
 
-.primary-btn:hover {
-  background-color: #4338ca;
+.tab-button.active {
+  font-weight: 600;
+  color: #2563eb;
+  border-bottom: 2px solid #2563eb;
 }
 
-.primary-btn:disabled {
-  background-color: #a5b4fc;
-  cursor: not-allowed;
-}
+/* =========================
+   MEDIA SECTIONS
+========================= */
 .media-tabs {
-  margin-top: 24px;
+  margin-top: 16px;
 }
 
 .media-tab {
-  margin-top: 16px;
+  margin-top: 12px;
 }
 
-.auth-file-input {
-  width: 100%;
-  padding: 14px;
-  border: 1px solid #d1d5db;
+/* =========================
+   BUTTON
+========================= */
+.primary-btn {
+  margin-top: 24px;
+  padding: 14px 20px;
+  font-size: 15px;
+  border: none;
   border-radius: 8px;
+  background-color: #2563eb;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.primary-btn:hover {
+  background-color: #1d4ed8;
+}
+
+/* =========================
+   RESPONSIVE FIX
+========================= */
+@media (max-width: 768px) {
+  .auth-page {
+    padding: 20px 16px;
+    max-width: 100%;
+  }
 }
