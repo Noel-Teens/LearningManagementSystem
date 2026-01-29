@@ -11,6 +11,16 @@ const articleSchema = new mongoose.Schema({
       updatedAt: Date
     }
   ],
+  image: {
+      type: String,
+    },
+    video: {
+      type: String,
+    },
+    file: {
+      type: String,
+    },
+
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
