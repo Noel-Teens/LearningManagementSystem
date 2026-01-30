@@ -1,5 +1,5 @@
 const Certificate = require("./certification.model");
-const Enrollment = require("../enrollment/enrollment.model");
+const Enrollment = require("../Enrollment/enrollment.model");
 const Course = require("../courses/course.model");
 const User = require("../auth/user.model");
 const { generateCertificatePDF } = require("./certification.utils");
