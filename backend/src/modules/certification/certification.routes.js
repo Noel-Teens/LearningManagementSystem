@@ -3,7 +3,7 @@ const router = express.Router();
 
 const certificateController = require("./certification.controller");
 // optional middlewares if you want to protect routes later
-// const authMiddleware = require("../../middlewares/auth.middleware");
+const authMiddleware = require("../../middlewares/auth.middleware");
 // const roleMiddleware = require("../../middlewares/role.middleware");
 
 /**
@@ -20,12 +20,31 @@ router.post(
 
 /**
  * Get all certificates for a user
- * GET /api/certificates/user/:userId
+ * GET /api/certifications/user/:userId
  */
 router.get(
   "/user/:userId",
   // authMiddleware,
   certificateController.getUserCertificates
+);
+
+/**
+ * Verify certificate authenticity
+ * GET /api/certifications/verify/:certificateId
+ */
+router.get(
+  "/verify/:certificateId",
+  certificateController.verifyCertificate
+);
+
+/**
+ * Get a single certificate by ID
+ * GET /api/certifications/:certificateId
+ */
+router.get(
+  "/:certificateId",
+  // authMiddleware,
+  certificateController.getCertificate
 );
 
 module.exports = router;

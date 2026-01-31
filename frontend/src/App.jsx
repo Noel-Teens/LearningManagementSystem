@@ -33,6 +33,9 @@ import AdminEnrollmentPage from "./modules/Enrollment/pages/AdminEnrollmentPage"
 import EnrolledCoursesPage from "./modules/Enrollment/pages/EnrolledCoursesPage";
 import CourseLearningPage from "./modules/Enrollment/pages/CourseLearningPage";
 
+// Certificate pages
+import CertificatesPage from "./modules/certification/pages/CertificatesPage";
+
 const DefaultRedirect = () => {
   const { user, loading } = useAuth();
 
@@ -192,6 +195,18 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={["Learner"]}>
                   <CourseLearningPage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Learner Certificates */}
+            <Route
+              path="/learner/certificates"
+              element={
+                <ProtectedRoute allowedRoles={["Learner"]}>
+                  <AppShell>
+                    <CertificatesPage />
+                  </AppShell>
                 </ProtectedRoute>
               }
             />
