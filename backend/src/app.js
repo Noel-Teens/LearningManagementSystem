@@ -33,6 +33,7 @@ app.use("/api/articles", articleRoutes);
 app.use("/api/enrollments", enrollmentRoutes);
 app.use("/api/certifications", certificationRoutes);
 
+app.use(express.urlencoded({ extended: true, limit: "100mb" }));
 // Health check endpoint
 app.get('/api/health', (req, res) => {
     res.status(200).json({
