@@ -1,16 +1,21 @@
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import "./CreateArticle.css";
 function CreateArticle() {
+  
   const [success, setSuccess] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("");
   const [tags, setTags] = useState("");
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
 
+  const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState("");
+  const [video, setVideo] = useState("");
+  const [file, setFile] = useState("");
+  const [mediaTab, setMediaTab] = useState("image");
+  const navigate = useNavigate();
   const createArticle = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -20,18 +25,28 @@ function CreateArticle() {
       }
 
       setLoading(true);
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("content", content);
+      formData.append("category", category);
+      formData.append(
+        "tags",
+        tags.split(",").map(t => t.trim()).filter(Boolean)
+      );
+
+      if (image) formData.append("image", image);
+      if (video) formData.append("video", video);
+      if (file) formData.append("file", file);
 
       const res = await axios.post(
         "http://localhost:5000/api/articles",
-        {
-          title,
-          content,
-          category,
-          tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
-        },
+        
+          formData,
+        
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -91,6 +106,71 @@ navigate(`/article/${articleId}`, { replace: true });
           value={content}
           onChange={(e) => setContent(e.target.value)}
         />
+        {/* MEDIA TABS */}
+        <div className="tabs media-tabs">
+          <button
+            type="button"
+            className={`tab-button ${mediaTab === "image" ? "active" : ""}`}
+            onClick={() => setMediaTab("image")}
+          >
+            Image
+          </button>
+
+          <button
+            type="button"
+            className={`tab-button ${mediaTab === "video" ? "active" : ""}`}
+            onClick={() => setMediaTab("video")}
+          >
+            Video
+          </button>
+
+          <button
+            type="button"
+            className={`tab-button ${mediaTab === "file" ? "active" : ""}`}
+            onClick={() => setMediaTab("file")}
+          >
+            Attachment
+          </button>
+        </div>
+
+        {/* MEDIA CONTENT */}
+        {mediaTab === "image" && (
+          <div className="media-tab">
+            <label className="file-label">Upload Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              className="auth-file-input"
+              onChange={(e) => setImage(e.target.files[0])}
+            />
+          </div>
+        )}
+
+        {mediaTab === "video" && (
+          <div className="media-tab">
+            <label className="file-label">Upload Video</label>
+            <input
+              type="file"
+              accept="video/*"
+              className="auth-file-input"
+              onChange={(e) => setVideo(e.target.files[0])}
+            />
+          </div>
+        )}
+
+        {mediaTab === "file" && (
+          <div className="media-tab">
+            <label className="file-label">
+              Upload Attachment (PDF / DOC / PPT)
+            </label>
+            <input
+              type="file"
+              accept=".pdf,.doc,.docx,.ppt,.pptx"
+              className="auth-file-input"
+              onChange={(e) => setFile(e.target.files[0])}
+            />
+          </div>
+        )}
 
         <button className="primary-btn" onClick={createArticle} disabled={loading}>
           {loading ? "Saving..." : "Save Article"}
