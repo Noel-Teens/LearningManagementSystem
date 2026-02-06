@@ -54,9 +54,9 @@ exports.generateCertificate = async (req, res) => {
     const user = await User.findById(userId).select("name");
     // Generate PDF
     const pdfFileName = await generateCertificatePDF({
-        userName: user.name,
-        courseTitle: course.title,
-        certificateId: `${userId}_${courseId}`
+      userName: user.name,
+      courseTitle: course.title,
+      certificateId: `${userId}_${courseId}`
     });
     const certificateUrl = `/uploads/certificates/${pdfFileName}`;
 
@@ -90,7 +90,7 @@ exports.generateCertificate = async (req, res) => {
 
 /**
  * Get certificates for a user
- * GET /api/certificates/user/:userId
+ * GET /api/certifications/user/:userId
  */
 exports.getUserCertificates = async (req, res) => {
   try {
@@ -110,6 +110,81 @@ exports.getUserCertificates = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Server error while fetching certificates"
+    });
+  }
+};
+
+/**
+ * Get a single certificate by ID
+ * GET /api/certifications/:certificateId
+ */
+exports.getCertificate = async (req, res) => {
+  try {
+    const { certificateId } = req.params;
+
+    const certificate = await Certificate.findById(certificateId)
+      .populate("userId", "name email")
+      .populate("courseId", "title");
+
+    if (!certificate) {
+      return res.status(404).json({
+        success: false,
+        message: "Certificate not found"
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: certificate
+    });
+
+  } catch (error) {
+    console.error("Fetch Certificate Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error while fetching certificate"
+    });
+  }
+};
+
+/**
+ * Verify certificate authenticity
+ * GET /api/certifications/verify/:certificateId
+ */
+exports.verifyCertificate = async (req, res) => {
+  try {
+    const { certificateId } = req.params;
+
+    const certificate = await Certificate.findById(certificateId)
+      .populate("userId", "name")
+      .populate("courseId", "title");
+
+    if (!certificate) {
+      return res.status(404).json({
+        success: false,
+        verified: false,
+        message: "Certificate not found or invalid"
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      verified: true,
+      data: {
+        certificateId: certificate._id,
+        userName: certificate.userId.name,
+        courseTitle: certificate.courseId.title,
+        issuedAt: certificate.issuedAt,
+        message: "Certificate is valid and authentic"
+      }
+    });
+
+  } catch (error) {
+    console.error("Verify Certificate Error:", error);
+    return res.status(500).json({
+      success: false,
+      verified: false,
+      message: "Server error while verifying certificate"
     });
   }
 };

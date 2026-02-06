@@ -65,3 +65,6 @@ Thumbs.db
 # ===============================
 tmp/
 temp/
+
+# Certification
+start-app.bat
