@@ -2,45 +2,48 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./search.css";
-import { useAuth } from "../modules/auth/context/AuthContext";
+import { useAuth } from "../auth/context/AuthContext";
 
 function Search() {
   const [keyword, setKeyword] = useState("");
   const [articles, setArticles] = useState([]);
   const navigate = useNavigate();
-    const { user } = useAuth();
+  const { user } = useAuth();
   // Normalize role (IMPORTANT)
   const userRole = (localStorage.getItem("role") || "")
     .toUpperCase()
     .trim();
 
   const search = async () => {
-  if (!keyword.trim()) {
-    alert("Please enter a keyword");
-    return;
-  }
-
-  
-  try {
-    const res = await axios.get(
-      "http://localhost:5000/api/articles/search",
-      {
-        params: { keyword },
-        
-      }
-    );
-
-    console.log("Search result:", res.data);
-    setArticles(res.data);
-
-    if (res.data.length === 0) {
-      alert("No articles found");
+    if (!keyword.trim()) {
+      alert("Please enter a keyword");
+      return;
     }
-  } catch (err) {
-    console.error("Search failed:", err.response || err);
-    alert("Search failed. Try again.");
-  }
-};
+
+
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(
+        "http://localhost:5000/api/articles/search",
+        {
+          params: { keyword },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("Search result:", res.data);
+      setArticles(res.data);
+
+      if (res.data.length === 0) {
+        alert("No articles found");
+      }
+    } catch (err) {
+      console.error("Search failed:", err.response || err);
+      alert("Search failed. Try again.");
+    }
+  };
 
 
   return (
@@ -89,7 +92,7 @@ function Search() {
         </ul>
 
         {/* ✅ Create Article only for Admin & Trainer */}
-        {["admin","superadmin","trainer"].includes(user?.role?.toLowerCase()) && (
+        {["admin", "superadmin", "trainer"].includes(user?.role?.toLowerCase()) && (
           <button
             className="secondary-btn"
             style={{ width: "100%", marginTop: "20px" }}
