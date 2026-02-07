@@ -2,6 +2,12 @@ import { useState } from 'react';
 import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../../../modules/auth/context/AuthContext';
 import { useTheme } from '../../../context/ThemeContext';
+import NotificationBell from "../../../modules/notification/components/NotificationBell";
+
+
+
+
+
 
 const AppShell = ({ children }) => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -9,6 +15,8 @@ const AppShell = ({ children }) => {
     const { isDark } = useTheme();
     const location = useLocation();
     const navigate = useNavigate();
+
+
 
     const handleLogout = () => {
         logout();
@@ -97,6 +105,11 @@ const AppShell = ({ children }) => {
 
                     {/* User menu */}
                     <div className="flex items-center gap-6">
+                        
+                        <NotificationBell />
+
+
+
                         <div className="text-right hidden sm:block">
                             <p className={`text-sm font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>{user?.name}</p>
                             <p className="text-xs font-medium text-indigo-600">{user?.role}</p>
@@ -140,6 +153,7 @@ const AppShell = ({ children }) => {
                 />
             )}
         </div>
+
     );
 };
 

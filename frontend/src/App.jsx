@@ -27,6 +27,8 @@ import ArticleDetails from "./pages/ArticleDetails";
 import CreateArticle from "./pages/CreateArticle";
 import EditArticle from "./pages/EditArticle";
 
+
+
 const DefaultRedirect = () => {
   const { user, loading } = useAuth();
 
@@ -70,6 +72,7 @@ function App() {
             }}
           />
 
+        
           <Routes>
             {/* Public routes */}
             <Route path="/login" element={<LoginPage />} />
