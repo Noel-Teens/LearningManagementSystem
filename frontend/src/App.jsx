@@ -33,8 +33,6 @@ import AdminEnrollmentPage from "./modules/Enrollment/pages/AdminEnrollmentPage"
 import EnrolledCoursesPage from "./modules/Enrollment/pages/EnrolledCoursesPage";
 import CourseLearningPage from "./modules/Enrollment/pages/CourseLearningPage";
 
-
-
 const DefaultRedirect = () => {
   const { user, loading } = useAuth();
 
@@ -80,7 +78,6 @@ function App() {
             }}
           />
 
-        
           <Routes>
             {/* Public routes */}
             <Route path="/login" element={<LoginPage />} />

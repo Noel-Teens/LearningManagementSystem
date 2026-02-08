@@ -7,7 +7,7 @@ const uploadRoutes = require('./modules/upload/upload.routes');
 const courseRoutes = require('./modules/courses/course.routes');
 const articleRoutes = require("./modules/article/article.routes");
 const enrollmentRoutes = require("./modules/Enrollment/enrollment.routes");
-const notificationRoutes = require("./modules/notification/routes/notificationRoutes");
+ 
 
 const app = express();
 
@@ -23,6 +23,8 @@ app.use('/api/organizations', organizationRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/courses', courseRoutes);
 app.use("/api/articles", articleRoutes);
+app.use("/api/enrollments", enrollmentRoutes);
+app.use("/api/notifications", require("./modules/notification/routes/notificationRoutes"));
 
 app.use(express.urlencoded({ extended: true, limit: "100mb" }));
 // Health check endpoint
@@ -38,5 +40,9 @@ app.get('/api/health', (req, res) => {
 
 // Error handler middleware
 app.use(errorHandler);
+
+// Initialize Cron Jobs
+require("./modules/notification/cron/reminder");
+require("./modules/notification/cron/enrollmentWatcher");
 
 module.exports = app;

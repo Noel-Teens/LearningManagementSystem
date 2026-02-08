@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const notificationSchema = new mongoose.Schema({
   userId: {
-    type: String,   
+    type: String,
     required: true
   },
   title: String,
@@ -11,7 +11,15 @@ const notificationSchema = new mongoose.Schema({
   isRead: {
     type: Boolean,
     default: false
+  },
+  referenceId: {
+    type: mongoose.Schema.Types.ObjectId,
+    refPath: 'onModel'
+  },
+  onModel: {
+    type: String,
+    enum: ['Course', 'Enrollment', 'User']
   }
-}, { timestamps: true }); 
+}, { timestamps: true });
 
 module.exports = mongoose.model("Notification", notificationSchema);
