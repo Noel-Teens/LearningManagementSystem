@@ -1,0 +1,18 @@
+.category {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.tag {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.edit-btn {
+  background-color: var(--primary);
+  color: white;
+}
+
+.edit-btn:hover {
+  background-color: var(--primary-dark);
+}
