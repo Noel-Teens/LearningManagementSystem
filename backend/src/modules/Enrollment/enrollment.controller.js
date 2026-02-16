@@ -1,6 +1,8 @@
 const Enrollment = require('./enrollment.model');
 const Course = require('../courses/course.model');
 const User = require('../auth/user.model');
+const { generateCertificatePDF } = require('../certification/certification.utils');
+const Certificate = require('../certification/certification.model');
 
 // =============================================================================
 // ADMIN APIs - Enrollment Management
@@ -398,16 +400,67 @@ exports.markLessonComplete = async (req, res, next) => {
         enrollment.progress.lastAccessedAt = new Date();
 
         // Recalculate progress
+        const previousProgress = enrollment.progress.courseProgress;
         enrollment.calculateProgress(course);
+        const newProgress = enrollment.progress.courseProgress;
 
         await enrollment.save();
 
+        // Auto-generate certificate if course just completed
+        let certificateData = null;
+        if (previousProgress < 100 && newProgress === 100) {
+            try {
+                // Check if certificate already exists
+                const existingCertificate = await Certificate.findOne({
+                    userId: req.user._id,
+                    courseId
+                });
+
+                if (!existingCertificate) {
+                    // Generate certificate PDF
+                    const pdfFileName = await generateCertificatePDF({
+                        userName: req.user.name,
+                        courseTitle: course.title,
+                        certificateId: `${req.user._id}_${courseId}`
+                    });
+
+                    const certificateUrl = `/uploads/certificates/${pdfFileName}`;
+
+                    // Save certificate to database
+                    const certificate = await Certificate.create({
+                        userId: req.user._id,
+                        courseId,
+                        certificateUrl,
+                        issuedAt: new Date()
+                    });
+
+                    certificateData = {
+                        certificateId: certificate._id,
+                        certificateUrl: certificate.certificateUrl,
+                        issuedAt: certificate.issuedAt
+                    };
+
+                    console.log(`Certificate auto-generated for user ${req.user._id} on course ${courseId}`);
+                } else {
+                    certificateData = {
+                        certificateId: existingCertificate._id,
+                        certificateUrl: existingCertificate.certificateUrl,
+                        issuedAt: existingCertificate.issuedAt
+                    };
+                }
+            } catch (certError) {
+                // Log error but don't fail the request
+                console.error('Certificate generation error:', certError);
+            }
+        }
+
         res.status(200).json({
             success: true,
-            message: 'Lesson marked as completed',
+            message: newProgress === 100 ? 'Course completed! Certificate generated.' : 'Lesson marked as completed',
             data: {
                 progress: enrollment.progress,
-                status: enrollment.status
+                status: enrollment.status,
+                certificate: certificateData
             }
         });
     } catch (error) {
