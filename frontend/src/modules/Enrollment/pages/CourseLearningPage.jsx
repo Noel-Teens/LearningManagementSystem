@@ -127,13 +127,36 @@ export default function CourseLearningPage() {
                 return {
                     ...prev,
                     modules: newModules,
-                    progress: response.data.progress
+                    progress: response.data.progress,
+                    status: response.data.status
                 };
             });
 
             setCurrentLesson(prev => ({ ...prev, isCompleted: true }));
 
-            toast.success('Lesson completed!');
+            // Check if course just completed and certificate was generated
+            if (response.data.certificate) {
+                toast.success(
+                    (t) => (
+                        <div>
+                            <div className="font-semibold mb-1">🎉 Congratulations!</div>
+                            <div className="text-sm mb-2">Course completed! Your certificate has been generated.</div>
+                            <button
+                                onClick={() => {
+                                    toast.dismiss(t.id);
+                                    navigate('/learner/certificates');
+                                }}
+                                className="text-xs bg-white text-indigo-600 px-3 py-1 rounded hover:bg-indigo-50"
+                            >
+                                View Certificate
+                            </button>
+                        </div>
+                    ),
+                    { duration: 8000 }
+                );
+            } else {
+                toast.success('Lesson completed!');
+            }
         } catch (error) {
             toast.error('Failed to mark lesson complete');
         } finally {
