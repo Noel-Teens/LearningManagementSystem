@@ -8,6 +8,7 @@ const uploadRoutes = require('./modules/upload/upload.routes');
 const courseRoutes = require('./modules/courses/course.routes');
 const articleRoutes = require("./modules/article/article.routes");
 const enrollmentRoutes = require("./modules/Enrollment/enrollment.routes");
+ 
 const reportsRoutes = require("./modules/reports/reports.routes");
 const certificationRoutes = require("./modules/certification/certification.routes");
 
@@ -32,6 +33,7 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/courses', courseRoutes);
 app.use("/api/articles", articleRoutes);
 app.use("/api/enrollments", enrollmentRoutes);
+app.use("/api/notifications", require("./modules/notification/routes/notificationRoutes"));
 app.use("/api/reports", reportsRoutes);
 app.use("/api/certifications", certificationRoutes);
 
@@ -49,5 +51,9 @@ app.get('/api/health', (req, res) => {
 
 // Error handler middleware
 app.use(errorHandler);
+
+// Initialize Cron Jobs
+require("./modules/notification/cron/reminder");
+require("./modules/notification/cron/enrollmentWatcher");
 
 module.exports = app;
