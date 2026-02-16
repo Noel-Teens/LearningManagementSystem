@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import * as notificationService from '../../services/notificationService';
 
 const AppShell = ({ children }) => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -8,9 +9,51 @@ const AppShell = ({ children }) => {
     const location = useLocation();
     const navigate = useNavigate();
 
+    // Notification State
+    const [notifications, setNotifications] = useState([]);
+    const [unreadCount, setUnreadCount] = useState(0);
+    const [showNotifications, setShowNotifications] = useState(false);
+
     const handleLogout = () => {
         logout();
         navigate('/login');
+    };
+
+    useEffect(() => {
+        if (user?._id) {
+            fetchNotifications();
+            // Poll every minute for new notifications
+            const interval = setInterval(fetchNotifications, 60000);
+            return () => clearInterval(interval);
+        }
+    }, [user]);
+
+    const fetchNotifications = async () => {
+        try {
+            const data = await notificationService.getNotifications(user._id);
+            setNotifications(data || []);
+            const unread = (data || []).filter(n => !n.isRead).length;
+            setUnreadCount(unread);
+        } catch (err) {
+            console.error("Failed to fetch notifications", err);
+        }
+    };
+
+    const handleMarkAsRead = async () => {
+        try {
+            await notificationService.markAsRead(user._id);
+            setUnreadCount(0);
+            setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+        } catch (err) {
+            console.error("Failed to mark read", err);
+        }
+    };
+
+    const toggleNotifications = () => {
+        setShowNotifications(!showNotifications);
+        if (!showNotifications && unreadCount > 0) {
+            handleMarkAsRead();
+        }
     };
 
     const allNavigation = [
@@ -62,7 +105,7 @@ const AppShell = ({ children }) => {
             {/* Main content */}
             <div className={`${sidebarOpen ? 'lg:ml-64' : ''}`}>
                 {/* Header */}
-                <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6">
+                <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 sticky top-0 z-30">
                     <button
                         onClick={() => setSidebarOpen(!sidebarOpen)}
                         className="lg:hidden p-2 rounded-lg hover:bg-gray-100"
@@ -74,6 +117,45 @@ const AppShell = ({ children }) => {
 
                     {/* User menu */}
                     <div className="flex items-center gap-4">
+                        {/* Notification Bell */}
+                        <div className="relative">
+                            <button
+                                onClick={toggleNotifications}
+                                className="p-2 text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors relative"
+                                title="Notifications"
+                            >
+                                <BellIcon className="w-6 h-6" />
+                                {unreadCount > 0 && (
+                                    <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
+                                )}
+                            </button>
+
+                            {/* Dropdown */}
+                            {showNotifications && (
+                                <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-100 z-50 overflow-hidden">
+                                    <div className="p-3 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                                        <h3 className="text-sm font-semibold text-gray-700">Notifications</h3>
+                                        <button onClick={handleMarkAsRead} className="text-xs text-indigo-600 hover:text-indigo-800">
+                                            Mark all read
+                                        </button>
+                                    </div>
+                                    <div className="max-h-96 overflow-y-auto">
+                                        {notifications.length === 0 ? (
+                                            <div className="p-4 text-center text-gray-500 text-sm">No notifications</div>
+                                        ) : (
+                                            notifications.map((notif) => (
+                                                <div key={notif._id} className={`p-4 border-b border-gray-50 hover:bg-gray-50 ${!notif.isRead ? 'bg-indigo-50/30' : ''}`}>
+                                                    <p className="text-sm font-medium text-gray-800">{notif.title}</p>
+                                                    <p className="text-xs text-gray-500 mt-1">{notif.message}</p>
+                                                    <p className="text-[10px] text-gray-400 mt-2">{new Date(notif.createdAt).toLocaleDateString()}</p>
+                                                </div>
+                                            ))
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
                         <div className="text-right">
                             <p className="text-sm font-medium text-gray-900">{user?.name}</p>
                             <p className="text-xs text-gray-500">{user?.role}</p>
@@ -139,6 +221,12 @@ const MenuIcon = ({ className }) => (
 const LogoutIcon = ({ className }) => (
     <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+    </svg>
+);
+
+const BellIcon = ({ className }) => (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
     </svg>
 );
 
