@@ -8,6 +8,7 @@ const uploadRoutes = require('./modules/upload/upload.routes');
 const courseRoutes = require('./modules/courses/course.routes');
 const articleRoutes = require("./modules/article/article.routes");
 const enrollmentRoutes = require("./modules/Enrollment/enrollment.routes");
+const reportsRoutes = require("./modules/reports/reports.routes");
 const certificationRoutes = require("./modules/certification/certification.routes");
 
 const app = express();
@@ -31,6 +32,7 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/courses', courseRoutes);
 app.use("/api/articles", articleRoutes);
 app.use("/api/enrollments", enrollmentRoutes);
+app.use("/api/reports", reportsRoutes);
 app.use("/api/certifications", certificationRoutes);
 
 app.use(express.urlencoded({ extended: true, limit: "100mb" }));

@@ -33,6 +33,9 @@ import AdminEnrollmentPage from "./modules/Enrollment/pages/AdminEnrollmentPage"
 import EnrolledCoursesPage from "./modules/Enrollment/pages/EnrolledCoursesPage";
 import CourseLearningPage from "./modules/Enrollment/pages/CourseLearningPage";
 
+// Reports & Analytics pages
+import AdminReportsPage from "./modules/reports/pages/AdminReportsPage";
+import TrainerAnalyticsPage from "./modules/reports/pages/TrainerAnalyticsPage";
 // Certificate pages
 import CertificatesPage from "./modules/certification/pages/CertificatesPage";
 
@@ -173,6 +176,30 @@ function App() {
                 <ProtectedRoute allowedRoles={["Admin", "SuperAdmin"]}>
                   <AppShell>
                     <AdminEnrollmentPage />
+                  </AppShell>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Admin Reports */}
+            <Route
+              path="/admin/reports"
+              element={
+                <ProtectedRoute allowedRoles={["Admin", "SuperAdmin"]}>
+                  <AppShell>
+                    <AdminReportsPage />
+                  </AppShell>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Trainer Analytics */}
+            <Route
+              path="/trainer/analytics"
+              element={
+                <ProtectedRoute allowedRoles={["Trainer"]}>
+                  <AppShell>
+                    <TrainerAnalyticsPage />
                   </AppShell>
                 </ProtectedRoute>
               }
